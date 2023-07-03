@@ -1,34 +1,19 @@
 import React, { useState } from 'react';
 import { Button, TextField, Box, Container, Card } from '@material-ui/core/';
-import { makeStyles } from '@material-ui/core/styles';
 import swal from 'sweetalert';
-import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import Logo from '../components/Logo';
 import background from './../components/bg2.png';
+import ApiHelper from "../ApiHelper";
 
-const useStyles = makeStyles((theme) => ({
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
-async function loginUser(credentials) {
-    return axios.post(`http://127.0.0.1:3090/api/login`, credentials)
-      .then(res => {
-        console.log(res.data)
-        return res.data
-      })
- }
 
 export default function Signin() {
-  const classes = useStyles();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const response = await loginUser({
+    const response = await ApiHelper.loginUser({
       email,
       password
     });
@@ -40,7 +25,7 @@ export default function Signin() {
       .then((value) => {
         localStorage.setItem('accessToken', response['accessToken']);
         localStorage.setItem('user', JSON.stringify(response['user']));
-        window.location.href = "/profile";
+        window.location.href = "/app/shop";
       });
     } else {
       swal("Failed", response.message, "error");
@@ -63,7 +48,7 @@ export default function Signin() {
       >
         <Container style={{ display: "flex", justifyContent: "center" }}>
           <Card style={{ maxWidth: 340, display: "flex", justifyContent: "center", borderRadius: '20px', padding: "60px 40px 60px 40px" }}>
-            <form className={classes.form} noValidate onSubmit={handleSubmit}>
+            <form noValidate onSubmit={handleSubmit}>
               <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
                 <Logo style={{ width: "190px" }} />
                 {/* <img alt="Logo" src="/static/logodcxblack.png" style={{ width: "170px" }} /> */}
@@ -96,7 +81,7 @@ export default function Signin() {
                 fullWidth
                 variant="contained"
                 color="primary"
-                className={classes.submit}
+                style={{ marginTop: '20px' }}
               >
                 เข้าสู่ระบบ
               </Button>

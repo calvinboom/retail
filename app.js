@@ -9,6 +9,7 @@ const config = require('./config.json');
 const indexRoutes = require('./api/routes');
 var path = require('path');
 const fileUpload = require('express-fileupload');
+require('dotenv').config({ path: './.env' });
 
 mongoose.connect(config.db.MONGOOSE_CONNECTION_STR).catch(err => {
 	console.log("\n!!! Can not connect PTA-dev DB !!!\n", err.message);
