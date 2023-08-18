@@ -35,7 +35,7 @@ export default function Signin() {
   return (
     <>
       <Helmet>
-        <title>Login | Retail system POS Project</title>
+        <title>เข้าสู่ระบบ | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
       </Helmet>
       <Box
         style={{

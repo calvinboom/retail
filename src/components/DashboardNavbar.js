@@ -26,7 +26,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
                     {/* <Logo /> */}
                     <Logo style={{ width: "85px", filter: "none", display: "flex", justifyContent: "center" }} />
                 </RouterLink>
-                <Typography sx={{ ml: 1 }}>Retail system POS</Typography>
+                <Typography sx={{ ml: 1 }}>ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</Typography>
                 <Box sx={{ flexGrow: 1 }} />
                 <IconButton color="inherit">
                     <InputIcon onClick={handleLogout} />
