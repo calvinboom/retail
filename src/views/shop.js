@@ -56,7 +56,7 @@ export default function Profile() {
           ...existingItems,
           {
             prod_id: data?.shortid,
-            price: data?.price,
+            price: data?.sell_price,
             name: data?.name,
             qty: 1
           }
@@ -65,22 +65,22 @@ export default function Profile() {
           ...existingItems,
           {
             prod_id: data?.shortid,
-            price: data?.price,
+            price: data?.sell_price,
             name: data?.name,
             qty: 1
           }
         ]
       })
-      setTotalPrice(prevTotalPrice => prevTotalPrice + Number(data?.price));
+      setTotalPrice(prevTotalPrice => prevTotalPrice + Number(data?.sell_price));
     } else {
       setCart(existingItems => {
         const itemIndex = existingItems.findIndex(item => item?.prod_id === data?.shortid)
-        setTotalPrice(prevTotalPrice => prevTotalPrice + Number(data?.price));
+        setTotalPrice(prevTotalPrice => prevTotalPrice + Number(data?.sell_price));
         localStorage.setItem('cart', JSON.stringify([
           ...existingItems.slice(0, itemIndex),
           {
             ...existingItems[itemIndex],
-            price: Number(check_cart[0]?.price) + Number(data?.price),
+            price: Number(check_cart[0]?.sell_price) + Number(data?.sell_price),
             qty: Number(check_cart[0]?.qty) + 1
           },
           ...existingItems.slice(itemIndex + 1),
@@ -89,7 +89,7 @@ export default function Profile() {
           ...existingItems.slice(0, itemIndex),
           {
             ...existingItems[itemIndex],
-            price: Number(check_cart[0]?.price) + Number(data?.price),
+            price: Number(check_cart[0]?.sell_price) + Number(data?.sell_price),
             qty: Number(check_cart[0]?.qty) + 1
           },
           ...existingItems.slice(itemIndex + 1),

@@ -11,7 +11,7 @@ const ProductCard = (props) => {
                 items.map((i) => {
                     let name = i.name;
                     let img = i.image;
-                    let price = i.price;
+                    let price = i.sell_price;
                     let prod_id = i.shortid;
                     if (img === null) img = "/static/no-img.png";
                     let filter_item = cart?.filter((element) => element.prod_id === prod_id);

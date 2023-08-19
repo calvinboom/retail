@@ -8,8 +8,10 @@ const itemsSchema = mongoose.Schema({
     shortid: { type: String, default: () => nanoid() },
     name: { type: String },
     type: { type: String },
-    price: { type: Number },
+    buy_price: { type: Number },
+    sell_price: { type: Number },
     image: { type: String, default: null },
+    barcode: { type: String, default: null },
     created_date: { type: Date, default: Date.now },
     updated_date: { type: Date, default: Date.now }
 });
