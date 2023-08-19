@@ -191,7 +191,7 @@ export default function SellingPage() {
               </Grid>
             </Box>
             <Card>
-              <CardContent sx={{ height: '74.8vh' }}>
+              <CardContent sx={{ height: '74.5vh' }}>
                 {
                   items !== null &&
                   <ImageList sx={{ width: 1, height: 1 }} cols={4}>
@@ -202,8 +202,8 @@ export default function SellingPage() {
             </Card>
           </Grid>
           <Grid item xs={3}>
-            <Card sx={{ height: '86vh' }}>
-              <CardContent style={{ textAlign: "center" }}>
+            <Card sx={{ height: '99%' }}>
+              <CardContent style={{ height: '100%', textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <Typography style={{ marginBottom: "10px", fontSize: "19px" }}>ตะกร้าสินค้า</Typography>
                 <Box sx={{ height: "65vh", width: '100%' }}>
                   <DataGrid
@@ -213,7 +213,7 @@ export default function SellingPage() {
                     hideFooter={true}
                   />
                 </Box>
-                <Typography style={{ marginTop: "10px", marginBottom: "10px", fontSize: "19px" }}>ราคารวม { totalPrice } บาท</Typography>
+                <Typography style={{ fontSize: "19px" }}>ราคารวม { totalPrice } บาท</Typography>
                 <PaymentCard totalPrice={totalPrice} createTransaction={createTransaction} cart={cart} />
               </CardContent>
             </Card>

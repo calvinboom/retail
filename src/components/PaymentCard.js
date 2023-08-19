@@ -27,7 +27,7 @@ const PaymentCard = (props) => {
 
     return (
         <>
-            <Button style={{ backgroundColor: "green", color: "white", fontSize: "18px", width: "100%" }} onClick={() => setOpenmodal(true)}>จ่ายเงิน</Button>
+            <Button style={{ backgroundColor: "green", color: "white", fontSize: "18px", width: "100%", marginBottom: "30px" }} onClick={() => setOpenmodal(true)}>จ่ายเงิน</Button>
             <Modal open={openmodal}>
                 <Box sx={{ ...style, width: 490 }}>
                     <Card>
