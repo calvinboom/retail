@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Box, Grid, TextField, MenuItem, ImageList, Typography, Button } from '@material-ui/core';
+import { Card, Box, Grid, TextField, MenuItem, ImageList, Typography, Link } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
@@ -72,6 +72,15 @@ export default function Profile() {
     }
   };
 
+  const deleteItemCart = async (data) => {
+    setTotalPrice(prevTotalPrice => prevTotalPrice - Number(data?.price));
+    let del_cart = [...cart];
+    var filtered = del_cart.filter((element) => { 
+      return String(element?.name) !== String(data?.name);
+    });
+    setCart(filtered);
+  };
+
   const columns = [
     {
       field: 'name',
@@ -81,7 +90,8 @@ export default function Profile() {
     {
       field: 'qty',
       headerName: 'จำนวน',
-      flex: 1,
+      type: 'number',
+      maxWidth: 30,
       editable: true,
       onchange: (params) => updateCart(params?.row)
     },
@@ -89,9 +99,18 @@ export default function Profile() {
       field: 'price',
       headerName: 'ราคา',
       type: 'number',
-      flex: 1,
+      maxWidth: 100,
       renderCell: (params) => params?.row?.price + " บาท",
-    }
+    },
+    {
+      type: "actions",
+      width: 60,
+      renderCell: (params) =>
+        <Link style={{ color: "red", cursor: 'pointer' }} onClick={() => deleteItemCart(params?.row)}>
+          ลบ
+        </Link>
+
+    },
   ];
 
   return (
