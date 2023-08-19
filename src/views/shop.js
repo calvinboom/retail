@@ -58,7 +58,7 @@ export default function Profile() {
     } else {
       setCart(existingItems => {
         const itemIndex = existingItems.findIndex(item => item?.prod_id === data?.shortid)
-        setTotalPrice(prevTotalPrice => prevTotalPrice + Number(existingItems[itemIndex]?.price));
+        setTotalPrice(prevTotalPrice => prevTotalPrice + Number(data?.price));
         return [
           ...existingItems.slice(0, itemIndex),
           {
