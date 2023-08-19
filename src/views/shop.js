@@ -126,12 +126,12 @@ export default function Profile() {
       field: 'price',
       headerName: 'ราคา',
       type: 'number',
-      maxWidth: 100,
+      maxWidth: 80,
       renderCell: (params) => params?.row?.price + " บาท",
     },
     {
       type: "actions",
-      width: 60,
+      width: 20,
       renderCell: (params) =>
         <Link style={{ color: "red", cursor: 'pointer' }} onClick={() => deleteItemCart(params?.row)}>
           ลบ
