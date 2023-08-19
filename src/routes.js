@@ -2,6 +2,7 @@ import { Navigate } from "react-router-dom";
 import DashboardLayout from "./components/DashboardLayout";
 import Login from "./views/login";
 import Shop from "./views/shop";
+import Transaction from "./views/transaction";
 
 const routes = (currentUser) => [
     {
@@ -10,6 +11,7 @@ const routes = (currentUser) => [
         children: [
             { path: "", element: currentUser ? <Navigate to="/app/shop" /> : <Navigate to="404" /> },
             { path: "shop", element: currentUser ? <Shop /> : <Navigate to="404" /> },
+            { path: "transaction", element: currentUser ? <Transaction /> : <Navigate to="404" /> },
         ],
     },
     {

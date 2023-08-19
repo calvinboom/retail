@@ -8,6 +8,11 @@ const main = [
         href: "/app/shop",
         icon: UsersIcon,
         title: "การขาย",
+    },
+    {
+        href: "/app/transaction",
+        icon: DollarSignIcon,
+        title: "บันทึกการขาย",
     }
 ];
 

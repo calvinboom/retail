@@ -11,13 +11,14 @@ const style = {
 };
 
 const PaymentCard = (props) => {
-    let { totalPrice } = props;
+    let { totalPrice, createTransaction, cart } = props;
     const [loading, setLoading] = useState(false);
     const [paymentType, setPaymentType] = useState("qr");
     const [openmodal, setOpenmodal] = useState(false);
 
     const onSubmit = async () => {
-        setLoading(true);
+        let res = await createTransaction({ data: cart, payment_type: paymentType });
+        if(res === true) setOpenmodal(false);
     };
 
     const onClose = async () => {

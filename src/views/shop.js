@@ -12,7 +12,7 @@ let initialFilters = {
   keyword: "",
 };
 
-export default function Profile() {
+export default function SellingPage() {
   const [filters, setFilters] = useState(initialFilters);
   const [items, setItems] = useState(null);
   let cart_session = JSON.parse(localStorage.getItem('cart'));
@@ -80,7 +80,7 @@ export default function Profile() {
           ...existingItems.slice(0, itemIndex),
           {
             ...existingItems[itemIndex],
-            price: Number(check_cart[0]?.sell_price) + Number(data?.sell_price),
+            price: Number(check_cart[0]?.price) + Number(data?.sell_price),
             qty: Number(check_cart[0]?.qty) + 1
           },
           ...existingItems.slice(itemIndex + 1),
@@ -89,7 +89,7 @@ export default function Profile() {
           ...existingItems.slice(0, itemIndex),
           {
             ...existingItems[itemIndex],
-            price: Number(check_cart[0]?.sell_price) + Number(data?.sell_price),
+            price: Number(check_cart[0]?.price) + Number(data?.sell_price),
             qty: Number(check_cart[0]?.qty) + 1
           },
           ...existingItems.slice(itemIndex + 1),
@@ -106,6 +106,16 @@ export default function Profile() {
     });
     localStorage.setItem('cart', JSON.stringify(filtered));
     setCart(filtered);
+  };
+
+  const createTransaction = async (data) => {
+    let res = await ApiHelper.createTransaction(data);
+    if(res?.status === "ok"){
+      localStorage.removeItem("cart");
+      setCart([]);
+      setTotalPrice(0);
+      return true;
+    }
   };
 
   const columns = [
@@ -181,7 +191,7 @@ export default function Profile() {
               </Grid>
             </Box>
             <Card>
-              <CardContent sx={{ height: '75vh' }}>
+              <CardContent sx={{ height: '74vh' }}>
                 {
                   items !== null &&
                   <ImageList sx={{ width: 1, height: 1 }} cols={4}>
@@ -195,7 +205,7 @@ export default function Profile() {
             <Card sx={{ height: '86vh' }}>
               <CardContent style={{ textAlign: "center" }}>
                 <Typography variant="h3" style={{ marginBottom: "10px" }}>ตะกร้าสินค้า</Typography>
-                <Box sx={{ height: 590, width: '100%' }}>
+                <Box sx={{ height: 520, width: '100%' }}>
                   <DataGrid
                     rows={cart}
                     columns={columns}
@@ -204,7 +214,7 @@ export default function Profile() {
                   />
                 </Box>
                 <Typography variant="h3" style={{ marginTop: "10px", marginBottom: "10px" }}>ราคารวม { totalPrice } บาท</Typography>
-                <PaymentCard totalPrice={totalPrice} />
+                <PaymentCard totalPrice={totalPrice} createTransaction={createTransaction} cart={cart} />
               </CardContent>
             </Card>
           </Grid>
