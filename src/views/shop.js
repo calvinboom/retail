@@ -128,7 +128,7 @@ export default function SellingPage() {
       field: 'qty',
       headerName: 'จำนวน',
       type: 'number',
-      minWidth: 50,
+      maxWidth: 50,
       editable: true,
       onchange: (params) => updateCart(params?.row)
     },
@@ -136,12 +136,12 @@ export default function SellingPage() {
       field: 'price',
       headerName: 'ราคา',
       type: 'number',
-      minWidth: 60,
+      maxWidth: 60,
       renderCell: (params) => params?.row?.price + " ฿",
     },
     {
       type: "actions",
-      minWidth: 30,
+      maxWidth: 30,
       renderCell: (params) =>
         <Link style={{ color: "red", cursor: 'pointer' }} onClick={() => deleteItemCart(params?.row)}>
           ลบ

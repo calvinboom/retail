@@ -198,7 +198,7 @@ export default function Transaction() {
               </Grid>
             </Box>
             <Card>
-              <Box sx={{ height: 550, width: '100%' }}>
+              <Box sx={{ height: "64vh", width: '100%' }}>
                 <DataGrid
                   rows={items || []}
                   columns={columns}

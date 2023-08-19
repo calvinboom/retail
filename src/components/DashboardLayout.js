@@ -8,9 +8,9 @@ const DashboardLayoutRoot = experimentalStyled('div')(
   ({ theme }) => ({
     backgroundColor: theme.palette.background.default,
     display: 'flex',
-    height: '100%',
+    height: '100vh',
     overflow: 'hidden',
-    width: '100%'
+    width: '100vw'
   })
 );
 
