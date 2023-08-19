@@ -15,9 +15,17 @@ let initialFilters = {
 export default function Profile() {
   const [filters, setFilters] = useState(initialFilters);
   const [items, setItems] = useState(null);
-  const user = JSON.parse(localStorage.getItem('user'));
-  const [cart, setCart] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
+  let cart_session = JSON.parse(localStorage.getItem('cart'));
+  let total = 0;
+  if(cart_session){
+    for(let index in cart_session){
+      total = Number(total) + Number(cart_session[index].price);
+    }
+  }else{
+    cart_session = [];
+  }
+  const [cart, setCart] = useState(cart_session);
+  const [totalPrice, setTotalPrice] = useState(total);
 
   useEffect(() => {
     if (items == null) {
@@ -44,6 +52,15 @@ export default function Profile() {
     let check_cart = cart?.filter((element) => element?.prod_id == data?.shortid);
     if (check_cart?.length == 0) {
       setCart(existingItems => {
+        localStorage.setItem('cart', JSON.stringify([
+          ...existingItems,
+          {
+            prod_id: data?.shortid,
+            price: data?.price,
+            name: data?.name,
+            qty: 1
+          }
+        ]));
         return [
           ...existingItems,
           {
@@ -59,6 +76,15 @@ export default function Profile() {
       setCart(existingItems => {
         const itemIndex = existingItems.findIndex(item => item?.prod_id === data?.shortid)
         setTotalPrice(prevTotalPrice => prevTotalPrice + Number(data?.price));
+        localStorage.setItem('cart', JSON.stringify([
+          ...existingItems.slice(0, itemIndex),
+          {
+            ...existingItems[itemIndex],
+            price: Number(check_cart[0]?.price) + Number(data?.price),
+            qty: Number(check_cart[0]?.qty) + 1
+          },
+          ...existingItems.slice(itemIndex + 1),
+        ]));
         return [
           ...existingItems.slice(0, itemIndex),
           {
@@ -78,6 +104,7 @@ export default function Profile() {
     var filtered = del_cart.filter((element) => { 
       return String(element?.name) !== String(data?.name);
     });
+    localStorage.setItem('cart', JSON.stringify(filtered));
     setCart(filtered);
   };
 
