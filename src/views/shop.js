@@ -155,11 +155,11 @@ export default function SellingPage() {
       <Helmet>
         <title>การขาย | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
       </Helmet>
-      <Box style={{ padding: "32px" }}>
+      <Box style={{ padding: "32px 32px 0px 32px" }}>
         <Grid container spacing={2} justifyContent="flex-end">
           <Grid item xs={9}>
             <Box component="form" noValidate autoComplete="off" mb={2}>
-              <Grid container spacing={2} justifyContent="flex-end">
+              <Grid container spacing={2} justifyContent="flex-end" sx={{height: '100%'}}>
                 <Grid item xs={2}>
                   <TextField
                     id="field-select"
