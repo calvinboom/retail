@@ -38,12 +38,12 @@ const PaymentCard = (props) => {
                             <Button style={{ backgroundColor: (paymentType === "cash") ? "grey" : "blue", color: "white", fontSize: "16px", width: "25%", marginLeft: "5px", marginBottom: "15px" }} onClick={() => setPaymentType("qr")}>QR พร้อมเพย์</Button>
                             <Divider />
                             <Box sx={{ width: "100%", mt: 2, textAlign: "center" }}>
-                                <Typography variant="h2">จำนวน {totalPrice} บาท</Typography>
+                                <Typography sx={{ fontSize: "22px" }}>จำนวน {totalPrice} บาท</Typography>
                             </Box>
                             { paymentType === "qr" &&
                                 <>
                                     <Box sx={{ height: "auto", maxWidth: 160, width: "100%", mt: 2 }}>
-                                        <img src="/static/qr/qr_code.jpg" style={{ maxWidth: 380, marginLeft: "35px" }} />
+                                        <img src="/static/qr/qr_code.jpg" style={{ maxWidth: 280, marginLeft: "85px" }} />
                                     </Box>
                                     <Divider />
                                 </>

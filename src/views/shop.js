@@ -128,7 +128,7 @@ export default function SellingPage() {
       field: 'qty',
       headerName: 'จำนวน',
       type: 'number',
-      maxWidth: 30,
+      minWidth: 50,
       editable: true,
       onchange: (params) => updateCart(params?.row)
     },
@@ -136,12 +136,12 @@ export default function SellingPage() {
       field: 'price',
       headerName: 'ราคา',
       type: 'number',
-      maxWidth: 80,
-      renderCell: (params) => params?.row?.price + " บาท",
+      minWidth: 60,
+      renderCell: (params) => params?.row?.price + " ฿",
     },
     {
       type: "actions",
-      width: 20,
+      minWidth: 30,
       renderCell: (params) =>
         <Link style={{ color: "red", cursor: 'pointer' }} onClick={() => deleteItemCart(params?.row)}>
           ลบ
@@ -191,7 +191,7 @@ export default function SellingPage() {
               </Grid>
             </Box>
             <Card>
-              <CardContent sx={{ height: '74vh' }}>
+              <CardContent sx={{ height: '74.8vh' }}>
                 {
                   items !== null &&
                   <ImageList sx={{ width: 1, height: 1 }} cols={4}>
@@ -204,8 +204,8 @@ export default function SellingPage() {
           <Grid item xs={3}>
             <Card sx={{ height: '86vh' }}>
               <CardContent style={{ textAlign: "center" }}>
-                <Typography variant="h3" style={{ marginBottom: "10px" }}>ตะกร้าสินค้า</Typography>
-                <Box sx={{ height: 520, width: '100%' }}>
+                <Typography style={{ marginBottom: "10px", fontSize: "19px" }}>ตะกร้าสินค้า</Typography>
+                <Box sx={{ height: "65vh", width: '100%' }}>
                   <DataGrid
                     rows={cart}
                     columns={columns}
@@ -213,7 +213,7 @@ export default function SellingPage() {
                     hideFooter={true}
                   />
                 </Box>
-                <Typography variant="h3" style={{ marginTop: "10px", marginBottom: "10px" }}>ราคารวม { totalPrice } บาท</Typography>
+                <Typography style={{ marginTop: "10px", marginBottom: "10px", fontSize: "19px" }}>ราคารวม { totalPrice } บาท</Typography>
                 <PaymentCard totalPrice={totalPrice} createTransaction={createTransaction} cart={cart} />
               </CardContent>
             </Card>
