@@ -6,7 +6,8 @@ const exportedObject = {
     loginUser,
     getItems,
     createTransaction,
-    getTransactions
+    getTransactions,
+    getDashboardReport
 };
 
 async function loginUser(payload = {}) {
@@ -32,6 +33,13 @@ async function createTransaction(data) {
 
 async function getTransactions(data) {
   return axios.post(`${BASE_API_URL}/api/transactions/list`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function getDashboardReport(data) {
+  return axios.post(`${BASE_API_URL}/api/transactions/report`, data)
     .then(res => {
       return res?.data
     })

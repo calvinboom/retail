@@ -46,18 +46,52 @@ exports.create_transaction = async (req, res) => {
 }
 
 exports.get_transaction = async (req, res) => {
-    const { start, end } = req.body;
-    /*let filter = {};
-    if(field != "all") filter.type = field;
-    if (keyword) {
-        filter.name = new RegExp(utils.escapeRegExp(keyword), "i");
-    }*/
-    let transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } }).sort({ created_date: 'asc' });
+    const { start, end , order, length } = req.body;
+    let sort_direction = "asc";
+    let transactions;
+
+    if(order) sort_direction = order.sort;
+
+    if(length){
+        transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } }).sort({ created_date: sort_direction }).limit(length);
+    }else{
+        transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } }).sort({ created_date: sort_direction });
+    }
+    
     if (transactions) {
         res.status(200).json({
             status: "ok",
             message: "Get items data",
             data: transactions,
+        });
+    } else {
+        res.status(500).json({
+            status: "nok",
+            message: "Can't get a items data",
+            data: null,
+        });
+    }
+}
+
+exports.get_transaction_report = async (req, res) => {
+    const { start, end } = req.body;
+    let transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } });
+    if (transactions) {
+        let report = {
+            total_qty: 0,
+            total_sell: 0,
+            total_profit: 0
+        };
+        for(let index in transactions){
+            let item = transactions[index];
+            report.total_qty = report.total_qty + item.qty;
+            report.total_sell = report.total_sell + item.sell_price;
+            report.total_profit = report.total_profit + item.profit;
+        }
+        res.status(200).json({
+            status: "ok",
+            message: "Get items data",
+            data: report,
         });
     } else {
         res.status(500).json({

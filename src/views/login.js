@@ -25,7 +25,7 @@ export default function Signin() {
       .then((value) => {
         localStorage.setItem('accessToken', response['accessToken']);
         localStorage.setItem('user', JSON.stringify(response['user']));
-        window.location.href = "/app/shop";
+        window.location.href = "/app/main";
       });
     } else {
       swal("Failed", response.message, "error");

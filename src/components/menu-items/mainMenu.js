@@ -1,17 +1,22 @@
 // assets
-import { DollarSign as DollarSignIcon, Users as UsersIcon, ArrowLeftCircle as ArrowLeftCircleIcon, MessageSquare as MessageSquareIcon, ShoppingBag as ShoppingBagIcon } from "react-feather";
+import { PieChart as PieChartIcon, MessageSquare as MessageSquareIcon, ShoppingBag as ShoppingBagIcon } from "react-feather";
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
 
 const main = [
     {
+        href: "/app/main",
+        icon: PieChartIcon,
+        title: "หน้าหลัก",
+    },
+    {
         href: "/app/shop",
-        icon: UsersIcon,
+        icon: ShoppingBagIcon,
         title: "การขาย",
     },
     {
         href: "/app/transaction",
-        icon: DollarSignIcon,
+        icon: MessageSquareIcon,
         title: "บันทึกการขาย",
     }
 ];
