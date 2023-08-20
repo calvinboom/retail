@@ -7,15 +7,9 @@ import dayjs from "dayjs";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment';
-import { Calendar, Home } from 'react-feather';
-
-let initialFilters = {
-  start: "all",
-  end: "",
-};
+import { Calendar } from 'react-feather';
 
 export default function Transaction() {
-  const [filters, setFilters] = useState(initialFilters);
   const [items, setItems] = useState(null);
 
   const [state, setState] = useState({
@@ -23,12 +17,13 @@ export default function Transaction() {
     end: moment().set({ hour: 23, minute: 59, second: 59, millisecond: 0 })
   }); 
 
-  const handleCallback = (startD, endD) => {
-    setState({ start: startD, end: endD });
-    fetchTransaction({ start: startD, end: endD});
-  };
-
   const { start, end } = state;
+
+  const label = start.format('DD MMM YY hh:mm a') + ' - ' + end.format('DD MMM YY hh:mm a');
+
+  const handleCallback = (start, end) => {
+    fetchTransaction({ start: start, end: end});
+  };
 
   useEffect(() => {
     if (items == null) {
@@ -50,7 +45,7 @@ export default function Transaction() {
       totalAll.total_sell = totalAll.total_sell + Number(item.sell_price);
       totalAll.total_profit = totalAll.total_profit + Number(item.profit);
     }
-    setState({...state, total_buy: totalAll.total_buy, total_sell: totalAll.total_sell, total_profit: totalAll.total_profit })
+    setState({ start: payload.start, end: payload.end, total_buy: totalAll.total_buy, total_sell: totalAll.total_sell, total_profit: totalAll.total_profit });
   };
 
   const columns = [
@@ -181,7 +176,7 @@ export default function Transaction() {
                       color="secondary"
                       variant="outlined"
                     >
-                      <span style={{ marginRight: '15px', color: 'black' }}>{start.format('DD MMM YY hh:mm a') + ' - ' + end.format('DD MMM YY hh:mm a')}</span>
+                      <span style={{ marginRight: '15px', color: 'black' }}>{label}</span>
                       <Calendar style={{ color: 'black', width: '18px' }} />
                     </Button>
                   </DateRangePicker>
