@@ -94,7 +94,7 @@ export default function Transaction() {
   return (
     <>
       <Helmet>
-        <title>การขาย | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
+        <title>บันทึกการขาย | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
       </Helmet>
       <Box style={{ padding: "32px" }}>
         <Grid container spacing={2} justifyContent="flex-end">

@@ -19,7 +19,7 @@ const Dashboard = () => {
     return (
         <>
             <Helmet>
-                <title>สรุปผลการขาย | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
+                <title>หน้าหลัก | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
             </Helmet>
 
             <Box className={classes.root}>

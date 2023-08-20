@@ -2,7 +2,7 @@ const Item = require('../models/items');
 const utils = require('../lib/utils');
 
 
-exports.get_item = async (req, res) => {
+exports.get_items = async (req, res) => {
     /*let items = [
         {
             name: "น้ำดื่ม",
@@ -137,6 +137,76 @@ exports.get_item = async (req, res) => {
         res.status(500).json({
             status: "nok",
             message: "Can't get a items data",
+            data: null,
+        });
+    }
+}
+
+exports.create_item = async (req, res) => {
+    let { data } = req.body;
+    if(data?.buy_price) data.buy_price = Number(data.buy_price);
+    if(data?.sell_price) data.sell_price = Number(data.sell_price);
+    let item = await Item.create(data);
+    if (item) {
+        res.status(200).json({
+            status: "ok",
+            message: "Create items data",
+            data: item,
+        });
+    } else {
+        res.status(500).json({
+            status: "nok",
+            message: "Can't create a items data",
+            data: null,
+        });
+    }
+}
+
+exports.get_item = async (req, res) => {
+    const { prod_id } = req.body;
+    let item = await Item.findOne({ _id: prod_id });
+    if (item) {
+        res.status(200).json({
+            status: "ok",
+            message: "Get item data successfully",
+            data: item,
+        });
+    } else {
+        res.status(500).json({
+            status: "nok",
+            message: "Can't get a item data",
+            data: null,
+        });
+    }
+}
+
+exports.update_item = async (req, res) => {
+    let { prod_id, data } = req.body;
+
+    if(data?.buy_price) data.buy_price = Number(data.buy_price);
+    if(data?.sell_price) data.sell_price = Number(data.sell_price);
+
+    let item = await Item.findOne({ _id: prod_id });
+
+    if(data?.name) item.name = data?.name;
+    if(data?.type) item.type = data?.type;
+    if(data?.buy_price) item.buy_price = data?.buy_price;
+    if(data?.sell_price) item.sell_price = data?.sell_price;
+    if(data?.image) item.image = data?.image;
+    if(data?.barcode) item.barcode = data?.barcode;
+
+    await item.save();
+
+    if (item) {
+        res.status(200).json({
+            status: "ok",
+            message: "Update item data",
+            data: item,
+        });
+    } else {
+        res.status(500).json({
+            status: "nok",
+            message: "Can't update item data",
             data: null,
         });
     }

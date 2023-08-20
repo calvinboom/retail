@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Box, Grid, TextField, MenuItem, ImageList, Typography, Link } from '@material-ui/core';
-import CardContent from '@material-ui/core/CardContent';
+import { Card, Box, Grid, TextField, MenuItem, Link, Button } from '@material-ui/core';
 import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
-import ProductCard from '../components/product-card';
-import PaymentCard from '../components/PaymentCard';
 import { DataGrid } from '@mui/x-data-grid';
+import { useNavigate } from "react-router-dom";
 
 let initialFilters = {
   field: "all",
   keyword: "",
 };
 
-export default function SellingPage() {
+export default function Product() {
   const [filters, setFilters] = useState(initialFilters);
   const [items, setItems] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (items == null) {
@@ -80,10 +80,9 @@ export default function SellingPage() {
       type: "actions",
       flex: 1,
       renderCell: (params) =>
-        <Link style={{ color: "blue", cursor: 'pointer' }}>
+        <Link style={{ color: "blue", cursor: 'pointer' }} onClick={ () => navigate(`/app/product/info/${params?.row?._id}`) }>
           แก้ไข
         </Link>
-
     },
   ];
 
@@ -96,6 +95,9 @@ export default function SellingPage() {
         <Grid container spacing={2} sx={{ height: 1 }}>
           <Grid item xs={12}>
             <Grid container spacing={2}>
+              <Grid item xs={1}>
+                <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100%" }} onClick={ () => navigate(`/app/product/new`) }>เพิ่มสินค้าใหม่</Button>
+              </Grid>
               <Grid item xs={2}>
                 <TextField
                   id="field-select"
@@ -114,7 +116,7 @@ export default function SellingPage() {
                   <MenuItem value={"2"}>อื่นๆ</MenuItem>
                 </TextField>
               </Grid>
-              <Grid item xs={10}>
+              <Grid item xs={9}>
                 <TextField
                   id="keyword-text"
                   size="small"
