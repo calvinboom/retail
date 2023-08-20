@@ -174,7 +174,8 @@ export default function SellingPage() {
                         onChange={(e) => handleSearchType({ ...filters, field: e.target.value })}
                       >
                         <MenuItem value={"all"}>ทั้งหมด</MenuItem>
-                        <MenuItem value={"3"}>ขนม, ขนมปัง</MenuItem>
+                        <MenuItem value={"3"}>ขนม</MenuItem>
+                        <MenuItem value={"4"}>ขนมปัง</MenuItem>
                         <MenuItem value={"1"}>เครื่องดื่ม</MenuItem>
                         <MenuItem value={"2"}>อื่นๆ</MenuItem>
                       </TextField>

@@ -4,6 +4,7 @@ import Login from "./views/login";
 import Shop from "./views/shop";
 import Transaction from "./views/transaction";
 import Main from "./views/main";
+import Product from "./views/product";
 
 const routes = (currentUser) => [
     {
@@ -14,6 +15,7 @@ const routes = (currentUser) => [
             { path: "main", element: currentUser ? <Main /> : <Navigate to="404" /> },
             { path: "shop", element: currentUser ? <Shop /> : <Navigate to="404" /> },
             { path: "transaction", element: currentUser ? <Transaction /> : <Navigate to="404" /> },
+            { path: "product", element: currentUser ? <Product /> : <Navigate to="404" /> },
         ],
     },
     {

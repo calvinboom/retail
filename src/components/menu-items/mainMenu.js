@@ -1,5 +1,5 @@
 // assets
-import { PieChart as PieChartIcon, MessageSquare as MessageSquareIcon, ShoppingBag as ShoppingBagIcon } from "react-feather";
+import { PieChart as PieChartIcon, MessageSquare as MessageSquareIcon, ShoppingBag as ShoppingBagIcon, Package as PackageIcon } from "react-feather";
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
 
@@ -18,6 +18,11 @@ const main = [
         href: "/app/transaction",
         icon: MessageSquareIcon,
         title: "บันทึกการขาย",
+    },
+    {
+        href: "/app/product",
+        icon: PackageIcon,
+        title: "สินค้า",
     }
 ];
 
