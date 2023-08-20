@@ -193,12 +193,14 @@ export default function SellingPage() {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
+                  <Box sx={{ height: "580px", width: '100%' }}>
                       {
                         items !== null &&
-                        <ImageList sx={{ width: 1, maxHeight: "58%" }} cols={4}>
+                        <ImageList sx={{ width: 1, height: 1, transform: 'translateZ(0)' }} cols={4}>
                           <ProductCard items={items} updateCart={updateCart} cart={cart} />
                         </ImageList>
                       }
+                  </Box>
                 </Grid>
               </Grid>
             </Card>
