@@ -156,53 +156,55 @@ export default function SellingPage() {
         <title>การขาย | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
       </Helmet>
       <Box style={{ padding: "32px 32px 0px 32px" }}>
-        <Grid container spacing={2} justifyContent="flex-end">
+        <Grid container spacing={2} sx={{ height: 1 }}>
           <Grid item xs={9}>
-            <Box component="form" noValidate autoComplete="off" mb={2}>
-              <Grid container spacing={2} justifyContent="flex-end" sx={{height: '100%'}}>
-                <Grid item xs={2}>
-                  <TextField
-                    id="field-select"
-                    size="small"
-                    select
-                    label="ชนิดสินค้า"
-                    fullWidth
-                    value={filters?.field}
-                    style={{ background: 'white' }}
-                    onChange={(e) => handleSearchType({ ...filters, field: e.target.value })}
-                  >
-                    <MenuItem value={"all"}>ทั้งหมด</MenuItem>
-                    <MenuItem value={"3"}>ขนม, ขนมปัง</MenuItem>
-                    <MenuItem value={"1"}>เครื่องดื่ม</MenuItem>
-                    <MenuItem value={"2"}>อื่นๆ</MenuItem>
-                  </TextField>
+            <Card sx={{ height: '85vh' }}>
+              <Grid container spacing={2} sx={{padding: "24px"}}>
+                <Grid item xs={12}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={2}>
+                      <TextField
+                        id="field-select"
+                        size="small"
+                        select
+                        label="ชนิดสินค้า"
+                        fullWidth
+                        value={filters?.field}
+                        style={{ background: 'white' }}
+                        onChange={(e) => handleSearchType({ ...filters, field: e.target.value })}
+                      >
+                        <MenuItem value={"all"}>ทั้งหมด</MenuItem>
+                        <MenuItem value={"3"}>ขนม, ขนมปัง</MenuItem>
+                        <MenuItem value={"1"}>เครื่องดื่ม</MenuItem>
+                        <MenuItem value={"2"}>อื่นๆ</MenuItem>
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={10}>
+                      <TextField
+                        id="keyword-text"
+                        size="small"
+                        label="ค้นหา name/serial/barcode"
+                        fullWidth
+                        value={filters?.keyword}
+                        style={{ background: 'white' }}
+                        onChange={(e) => handleSearchKeyword({ ...filters, keyword: e.target.value })}
+                      ></TextField>
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item xs={10}>
-                  <TextField
-                    id="keyword-text"
-                    size="small"
-                    label="ค้นหา name/serial/barcode"
-                    fullWidth
-                    value={filters?.keyword}
-                    style={{ background: 'white' }}
-                    onChange={(e) => handleSearchKeyword({ ...filters, keyword: e.target.value })}
-                  ></TextField>
+                <Grid item xs={12}>
+                      {
+                        items !== null &&
+                        <ImageList sx={{ width: 1, maxHeight: "58%" }} cols={4}>
+                          <ProductCard items={items} updateCart={updateCart} cart={cart} />
+                        </ImageList>
+                      }
                 </Grid>
               </Grid>
-            </Box>
-            <Card>
-              <CardContent sx={{ height: '74.5vh' }}>
-                {
-                  items !== null &&
-                  <ImageList sx={{ width: 1, height: 1 }} cols={4}>
-                    <ProductCard items={items} updateCart={updateCart} cart={cart} />
-                  </ImageList>
-                }
-              </CardContent>
             </Card>
           </Grid>
           <Grid item xs={3}>
-            <Card sx={{ height: '99%' }}>
+            <Card sx={{ height: '85vh' }}>
               <CardContent style={{ height: '100%', textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <Typography style={{ marginBottom: "10px", fontSize: "19px" }}>ตะกร้าสินค้า</Typography>
                 <Box sx={{ height: "65vh", width: '100%' }}>
