@@ -10,7 +10,7 @@ const indexRoutes = require('./api/routes');
 const itemsRoutes = require('./api/routes/items');
 const transactionRoutes = require('./api/routes/transaction');
 var path = require('path');
-const fileUpload = require('express-fileupload');
+//const fileUpload = require('express-fileupload');
 require('dotenv').config({ path: './.env' });
 
 mongoose.connect(config.db.MONGOOSE_CONNECTION_STR).catch(err => {
@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 app.use(bodyParser.json());
-app.use(fileUpload());
+//app.use(fileUpload());
 app.use(expressValidator());
 app.use(cors());
 app.use('/api', indexRoutes);

@@ -49,7 +49,7 @@ export default function Product() {
       field: 'image',
       headerName: 'รูปสินค้า',
       flex: 1,
-      renderCell: (params) => params?.row?.image === null ? "No Image." : "Image",
+      renderCell: (params) => params?.row?.image === null ? "No Image." : <img src={params?.row?.image} style={{maxWidth: "35px", height: "auto", objectFit: "cover" }} />,
     },
     {
       field: 'name',
@@ -96,7 +96,7 @@ export default function Product() {
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={1}>
-                <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100%" }} onClick={ () => navigate(`/app/product/new`) }>เพิ่มสินค้าใหม่</Button>
+                <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100%" }} onClick={ () => navigate(`/app/product/new`) }>เพิ่มสินค้า</Button>
               </Grid>
               <Grid item xs={2}>
                 <TextField

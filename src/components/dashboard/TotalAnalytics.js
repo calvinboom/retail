@@ -55,7 +55,7 @@ const TotalAnalytics = () => {
     useEffect(() => {
         if (loading) {
 
-            const last24Hours = dayjs().subtract(24, "hour").utc().format(DATE_FORMAT);
+            const last24Hours = dayjs().hour(0).minute(0).second(0).millisecond(0).utc().format(DATE_FORMAT);
             const now = dayjs().utc().format(DATE_FORMAT);
 
             fetchDashboardReport({ start: last24Hours, end: now });

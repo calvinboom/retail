@@ -158,7 +158,7 @@ export default function SellingPage() {
       <Box style={{ padding: "32px 32px 0px 32px" }}>
         <Grid container spacing={2} sx={{ height: 1 }}>
           <Grid item xs={9}>
-            <Card sx={{ height: '85vh' }}>
+            <Card sx={{ height: '82vh' }}>
               <Grid container spacing={2} sx={{padding: "24px"}}>
                 <Grid item xs={12}>
                   <Grid container spacing={2}>
@@ -194,7 +194,7 @@ export default function SellingPage() {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <Box sx={{ height: "580px", width: '100%' }}>
+                  <Box sx={{ height: "550px", width: '100%' }}>
                       {
                         items !== null &&
                         <ImageList sx={{ width: 1, height: 1, transform: 'translateZ(0)' }} cols={4}>
@@ -207,10 +207,10 @@ export default function SellingPage() {
             </Card>
           </Grid>
           <Grid item xs={3}>
-            <Card sx={{ height: '85vh' }}>
+            <Card sx={{ height: '82vh' }}>
               <CardContent style={{ height: '100%', textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <Typography style={{ marginBottom: "10px", fontSize: "19px" }}>ตะกร้าสินค้า</Typography>
-                <Box sx={{ height: "65vh", width: '100%' }}>
+                <Box sx={{ height: "58vh", width: '100%' }}>
                   <DataGrid
                     rows={cart}
                     columns={columns}

@@ -1,6 +1,6 @@
 const Item = require('../models/items');
 const utils = require('../lib/utils');
-
+var fs = require('fs');
 
 exports.get_items = async (req, res) => {
     /*let items = [
@@ -143,10 +143,34 @@ exports.get_items = async (req, res) => {
 }
 
 exports.create_item = async (req, res) => {
-    let { data } = req.body;
-    if(data?.buy_price) data.buy_price = Number(data.buy_price);
-    if(data?.sell_price) data.sell_price = Number(data.sell_price);
+    let { name, type, buy_price, sell_price, barcode } = req.body;
+    let file = req.file;
+
+    if(buy_price) buy_price = Number(buy_price);
+    if(sell_price) sell_price = Number(sell_price);
+
+    let data = {
+        name: name,
+        type: type,
+        buy_price: buy_price,
+        sell_price: sell_price,
+        barcode: barcode || null
+    };
+
     let item = await Item.create(data);
+
+    if (file) {
+        let filesplit = file.filename.split(".");
+        let filetype = filesplit[filesplit.length - 1];
+        let new_filename = file.destination.split("public")[1] + "/" + item.shortid + "." + filetype;
+        fs.rename(file.path, file.destination + "/" + item.shortid + "." + filetype, function (err) {
+            if (err) throw err;
+        });
+        item.image = new_filename;
+    }
+
+    await item.save();
+
     if (item) {
         res.status(200).json({
             status: "ok",
@@ -181,19 +205,28 @@ exports.get_item = async (req, res) => {
 }
 
 exports.update_item = async (req, res) => {
-    let { prod_id, data } = req.body;
+    let { prod_id, name, type, buy_price, sell_price, barcode } = req.body;
+    let file = req.file;
 
-    if(data?.buy_price) data.buy_price = Number(data.buy_price);
-    if(data?.sell_price) data.sell_price = Number(data.sell_price);
+    if(buy_price) buy_price = Number(buy_price);
+    if(sell_price) sell_price = Number(sell_price);
 
     let item = await Item.findOne({ _id: prod_id });
 
-    if(data?.name) item.name = data?.name;
-    if(data?.type) item.type = data?.type;
-    if(data?.buy_price) item.buy_price = data?.buy_price;
-    if(data?.sell_price) item.sell_price = data?.sell_price;
-    if(data?.image) item.image = data?.image;
-    if(data?.barcode) item.barcode = data?.barcode;
+    if(name) item.name = name;
+    if(type) item.type = type;
+    if(buy_price) item.buy_price = buy_price;
+    if(sell_price) item.sell_price = sell_price;
+    if(barcode) item.barcode = barcode;
+    if (file) {
+        let filesplit = file.filename.split(".");
+        let filetype = filesplit[filesplit.length - 1];
+        let new_filename = file.destination.split("public")[1] + "/" + item.shortid + "." + filetype;
+        fs.rename(file.path, file.destination + "/" + item.shortid + "." + filetype, function (err) {
+            if (err) throw err;
+        });
+        item.image = new_filename;
+    }
 
     await item.save();
 

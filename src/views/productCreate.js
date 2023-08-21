@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Box, Grid, TextField, Typography, Link, Button, MenuItem } from '@material-ui/core';
+import { Card, Box, Grid, TextField, Typography, Button, MenuItem } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
@@ -7,6 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export default function CreateProduct() {
   const [state, setState] = useState({});
+  const [fileImage, setFile] = useState({});
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -24,14 +26,26 @@ export default function CreateProduct() {
   };
 
   const submitProduct = async (payload = {}) => {
+    const formData = new FormData()
+    if(fileImage) {
+      formData.append('file', fileImage);
+    }
+    formData.append('name', payload.data.name);
+    formData.append('type', payload.data.type);
+    formData.append('buy_price', payload.data.buy_price);
+    formData.append('sell_price', payload.data.sell_price);
+    console.log("formData", formData.values())
+
     if(id){
-      payload.prod_id = id;
-      const res = await ApiHelper.updateItem(payload);
+      formData.append('prod_id', id)
+      console.log("formData", formData.values())
+      const res = await ApiHelper.updateItem(formData);
       if(res?.status === "ok"){
         navigate(`/app/product/`);
       }
     }else{
-      const res = await ApiHelper.createItems(payload);
+      console.log("formData", formData.values())
+      const res = await ApiHelper.createItems(formData);
       if(res?.status === "ok"){
         navigate(`/app/product/`);
       }
@@ -48,6 +62,17 @@ export default function CreateProduct() {
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
+
+  const handleUploadImage = (e) => { 
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+        setFile(file)
+        setState({...state, image: reader.result })
+        setImagePreviewUrl(reader.result)
+    }
+    reader.readAsDataURL(file)
+  }
 
   return (
     <>
@@ -138,11 +163,12 @@ export default function CreateProduct() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <TextField
                     id="merchant-name-field"
                     label="บาร์โค้ด"
                     size="small"
+                    disabled
                     value={state?.barcode || ""}
                     name="barcode"
                     fullWidth
@@ -151,18 +177,20 @@ export default function CreateProduct() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    id="merchant-name-field"
-                    label="รูปสินค้า *"
-                    size="small"
-                    value={""}
-                    error={""}
-                    name="image"
-                    fullWidth
-                    InputLabelProps={{ shrink: true }}
-                    autoComplete='off'
-                  />
+                <Grid item xs={12} sx={{ display: "flex", flexDirection: "row" }}>
+                  <img src={state?.image && !imagePreviewUrl ? state?.image : imagePreviewUrl || "/static/no-img.png"} style={{maxWidth: "200px", height: "auto", objectFit: "cover" }} />
+                  <Button
+                    variant="contained"
+                    component="label"
+                    sx={{ width: "100px", height: "40px", marginLeft: '10px' }}
+                  >
+                    อัพโหลดรูป
+                    <input
+                      type="file"
+                      hidden
+                      onChange={handleUploadImage}
+                    />
+                  </Button>
                 </Grid>
                 <Grid item xs={12}>
                   <Button sx={{ border: "1px solid blue", color: "blue", margin: "5px" }} onClick={ () => navigate(`/app/product/`) }>กลับสู่หน้าสินค้า</Button>

@@ -24,7 +24,7 @@ const routes = (currentUser) => [
     {
         path: "/",
         children: [
-            { path: "", element: currentUser ? <Navigate to="/app/shop" /> : <Login /> },
+            { path: "", element: currentUser ? <Navigate to="/app/main" /> : <Login /> },
             { path: "login", element: <Login /> },
         ],
     },
