@@ -13,8 +13,8 @@ const exportedObject = {
     updateItem
 };
 
-async function loginUser(payload = {}) {
-    return axios.post(`${BASE_API_URL}/api/login`, payload = {})
+async function loginUser(data = {}) {
+    return axios.post(`${BASE_API_URL}/api/login`, data)
       .then(res => {
         return res?.data
       })
