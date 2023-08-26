@@ -34,6 +34,7 @@ export default function SellingPage() {
   }, [totalPrice]); // eslint-disable-line
 
   const fetchItems = async (payload = {}) => {
+    setItems(null);
     const res = await ApiHelper.getItems(payload);
     setItems(res?.data);
   };
