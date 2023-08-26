@@ -47,7 +47,7 @@ const RecentTransactions = () => {
     const fetchPayments = async (payload = {}) => {
 
         setLoading(true);
-        const last24Hours = dayjs().subtract(24, "hour").utc().format(DATE_FORMAT);
+        const last24Hours = dayjs().startOf('month').utc().format(DATE_FORMAT);
         const now = dayjs().utc().format(DATE_FORMAT);
         payload.start = last24Hours;
         payload.end = now;
