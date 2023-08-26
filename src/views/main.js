@@ -5,7 +5,8 @@ import { Box, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import TotalAnalytics from "../components/dashboard/TotalAnalytics";
 import RecentTransactions from "../components/dashboard/RecentTransactions";
-//import RecentPayouts from "../components/dashboard/RecentPayouts";
+import BestSeller from "../components/dashboard/BestSeller";
+import BestProfit from "../components/dashboard/BestProfit";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,7 +30,10 @@ const Dashboard = () => {
                         <RecentTransactions />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        {/*<RecentPayouts />*/}
+                        <BestSeller />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <BestProfit />
                     </Grid>
                 </Grid>
             </Box>

@@ -74,30 +74,54 @@ exports.get_transaction = async (req, res) => {
 }
 
 exports.get_transaction_report = async (req, res) => {
-    const { start, end } = req.body;
-    let transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } });
-    if (transactions) {
-        let report = {
-            total_qty: 0,
-            total_sell: 0,
-            total_profit: 0
-        };
-        for(let index in transactions){
-            let item = transactions[index];
-            report.total_qty = report.total_qty + item.qty;
-            report.total_sell = report.total_sell + item.sell_price;
-            report.total_profit = report.total_profit + item.profit;
+    const { start, end, type } = req.body;
+    console.log(req.body)
+    if(type == "recent"){
+        let transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } });
+        if (transactions) {
+            let report = {
+                total_qty: 0,
+                total_sell: 0,
+                total_profit: 0
+            };
+            for(let index in transactions){
+                let item = transactions[index];
+                report.total_qty = report.total_qty + item.qty;
+                report.total_sell = report.total_sell + item.sell_price;
+                report.total_profit = report.total_profit + item.profit;
+            }
+            res.status(200).json({
+                status: "ok",
+                message: "Get items data",
+                data: report,
+            });
+        } else {
+            res.status(500).json({
+                status: "nok",
+                message: "Can't get a items data",
+                data: null,
+            });
         }
-        res.status(200).json({
-            status: "ok",
-            message: "Get items data",
-            data: report,
-        });
-    } else {
-        res.status(500).json({
-            status: "nok",
-            message: "Can't get a items data",
-            data: null,
-        });
+    }else {
+        let sort_name = "";
+        if(type == "bestseller") sort_name = { "qty": -1 };
+        if(type == "bestprofit") sort_name = { "profit": -1 };
+        let transactions = await Transaction.aggregate([
+            { $group : { _id: "$name", qty: { $sum:"$qty" }, buy_price: { $sum:"$buy_price" }, sell_price: { $sum:"$sell_price" }, profit: { $sum:"$profit" }}},
+            { $sort: sort_name } 
+        ]).limit(5)
+        if (transactions) {
+            res.status(200).json({
+                status: "ok",
+                message: "Get items data",
+                data: transactions,
+            });
+        } else {
+            res.status(500).json({
+                status: "nok",
+                message: "Can't get a items data",
+                data: null,
+            });
+        }
     }
 }

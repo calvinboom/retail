@@ -58,7 +58,7 @@ const TotalAnalytics = () => {
             const last24Hours = dayjs().hour(0).minute(0).second(0).millisecond(0).utc().format(DATE_FORMAT);
             const now = dayjs().utc().format(DATE_FORMAT);
 
-            fetchDashboardReport({ start: last24Hours, end: now });
+            fetchDashboardReport({ start: last24Hours, end: now, type: "recent" });
             setLoading(false);
         }
         if (dashboardReport == null) {
