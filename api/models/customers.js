@@ -18,6 +18,6 @@ const customersSchema = mongoose.Schema({
     updated_date: { type: Date, default: Date.now }
 });
 
-customersSchema.index({ email: 1 }, { unique: true });
+customersSchema.index({ customer_id: 1 }, { unique: true });
 
 module.exports = mongoose.model('Customer', customersSchema);
