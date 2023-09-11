@@ -134,10 +134,10 @@ export default function CreateProduct() {
                       โปรดเลือกประเภทผู้ใช้งาน
                     </MenuItem>
                     <MenuItem key={"user"} value={"user"}>
-                      User
+                      พนักงาน
                     </MenuItem>
                     <MenuItem key={"admin"} value={"admin"}>
-                      Admin
+                      เจ้าของร้าน
                     </MenuItem>
                   </TextField>
                 </Grid>

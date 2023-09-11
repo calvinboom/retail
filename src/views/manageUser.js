@@ -42,6 +42,7 @@ export default function Transaction() {
       field: 'role',
       headerName: 'ตำแหน่ง',
       flex: 1,
+      renderCell: (params) => params?.row?.role === "user" ? "พนักงาน" : "เจ้าของร้าน",
     },
     {
       field: 'created_date',
