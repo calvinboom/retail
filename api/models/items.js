@@ -10,6 +10,7 @@ const itemsSchema = mongoose.Schema({
     type: { type: String },
     buy_price: { type: Number },
     sell_price: { type: Number },
+    qty: { type: Number, default: 0 },
     image: { type: String, default: null },
     barcode: { type: String, default: null },
     created_date: { type: Date, default: Date.now },

@@ -10,7 +10,11 @@ const exportedObject = {
     getDashboardReport,
     createItems,
     getItem,
-    updateItem
+    updateItem,
+    getUsers,
+    getUser,
+    createUser,
+    updateUser
 };
 
 async function loginUser(data = {}) {
@@ -64,6 +68,34 @@ async function getTransactions(data) {
 
 async function getDashboardReport(data) {
   return axios.post(`${BASE_API_URL}/api/transactions/report`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function getUsers(data = {}) {
+  return axios.get(`${BASE_API_URL}/api/users`)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function getUser(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/user`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function createUser(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/create-user`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function updateUser(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/update-user`, data)
     .then(res => {
       return res?.data
     })

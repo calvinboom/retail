@@ -11,6 +11,7 @@ const usersSchema = mongoose.Schema({
 	fname: { type: String },
     lname: { type: String },
     avatar: { type: String },
+    role: { type: String, default: "user" },
     created_date: { type: Date, default: Date.now },
     updated_date: { type: Date, default: Date.now }
 });

@@ -77,3 +77,120 @@ exports.login = async (req, res) => {
         console.log(err)
     }
 }
+
+
+exports.get_users = async (req, res) => {
+    try{
+        let users = await User.find();
+        if(users){
+            res.status(200).json({
+                status: "ok",
+                message: "Get users data",
+                data: users,
+            });
+        } else {
+            res.status(500).json({
+                status: "nok",
+                message: "Can't get a users data",
+                data: null,
+            });
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
+
+exports.get_user = async (req, res) => {
+    try{
+        const { id } = req.body;
+        let user = await User.findOne({ shortid: id });
+        let user_data = {
+            email: user.email,
+            fname: user.fname,
+            lname: user.lname,
+            role: user.role,
+        };
+        if(user_data){
+            res.status(200).json({
+                status: "ok",
+                message: "Get user data",
+                data: user_data,
+            });
+        } else {
+            res.status(500).json({
+                status: "nok",
+                message: "Can't get a user data",
+                data: null,
+            });
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
+
+exports.create_user = async (req, res) => {
+    try{
+        let { data } = req.body;
+        const hashedPassword = await new Promise((resolve, reject) => {
+            bcrypt.hash(data.password, 10, function(err, hash) {
+                if (err) reject(err)
+                resolve(hash)
+            });
+        });
+        data.password = hashedPassword;
+        let user = await User.create(data);
+        if(user){
+            res.status(200).json({
+                status: "ok",
+                message: "Create an user successfully",
+                data: user,
+            });
+        } else {
+            res.status(500).json({
+                status: "nok",
+                message: "Can't create an user",
+                data: null,
+            });
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
+
+exports.update_user = async (req, res) => {
+    try{
+        let { data, id } = req.body;
+        let user = await User.findOne({ shortid: id });
+        if(data.password && data.password != ""){
+            const hashedPassword = await new Promise((resolve, reject) => {
+                bcrypt.hash(data.password, 10, function(err, hash) {
+                    if (err) reject(err)
+                    resolve(hash)
+                });
+            });
+            data.password = hashedPassword;
+        }
+        if(data.email) user.email = data.email;
+        if(data.fname) user.fname = data.fname;
+        if(data.lname) user.lname = data.lname;
+        if(data.role) user.role = data.role;
+
+        await user.save();
+
+        if(user){
+            res.status(200).json({
+                status: "ok",
+                message: "Create an user successfully",
+                data: user,
+            });
+        } else {
+            res.status(500).json({
+                status: "nok",
+                message: "Can't create an user",
+                data: null,
+            });
+        }
+    }catch(err){
+        console.log(err)
+    }
+}

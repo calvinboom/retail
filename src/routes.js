@@ -6,6 +6,8 @@ import Transaction from "./views/transaction";
 import Main from "./views/main";
 import Product from "./views/product";
 import ProductCreate from "./views/productCreate";
+import ManageUser from "./views/manageUser";
+import ManageUserCreate from "./views/manageUserCreate";
 
 const routes = (currentUser) => [
     {
@@ -19,6 +21,9 @@ const routes = (currentUser) => [
             { path: "product", element: currentUser ? <Product /> : <Navigate to="404" /> },
             { path: "product/new", element: currentUser ? <ProductCreate /> : <Navigate to="404" /> },
             { path: "product/info/:id", element: currentUser ? <ProductCreate /> : <Navigate to="404" /> },
+            { path: "manage-user", element: currentUser ? <ManageUser /> : <Navigate to="404" /> },
+            { path: "manage-user/new", element: currentUser ? <ManageUserCreate /> : <Navigate to="404" /> },
+            { path: "manage-user/info/:id", element: currentUser ? <ManageUserCreate /> : <Navigate to="404" /> },
         ],
     },
     {
