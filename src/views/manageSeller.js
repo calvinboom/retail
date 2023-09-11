@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { useNavigate } from "react-router-dom";
 
-export default function ManageCustomer() {
+export default function ManageSeller() {
   const [items, setItems] = useState(null);
   const navigate = useNavigate();
 
@@ -18,11 +18,21 @@ export default function ManageCustomer() {
   }, []); // eslint-disable-line
 
   const fetchTransaction = async (payload = {}) => {
-    const res = await ApiHelper.getUsers(payload);
+    const res = await ApiHelper.getSellers(payload);
     setItems(res?.data);
   };
 
   const columns = [
+    {
+      field: 'seller_id',
+      headerName: 'รหัสตัวแทน',
+      flex: 1,
+    },
+    {
+      field: 'shop_name',
+      headerName: 'ชื่อร้าน',
+      flex: 1,
+    },
     {
       field: 'email',
       headerName: 'อีเมล',
@@ -44,22 +54,15 @@ export default function ManageCustomer() {
       flex: 1
     },
     {
-      field: 'role',
-      headerName: 'ตำแหน่ง',
-      flex: 1,
-      renderCell: (params) => params?.row?.role === "user" ? "พนักงาน" : "เจ้าของร้าน",
-    },
-    {
-      field: 'created_date',
-      headerName: 'วันที่สร้าง',
-      flex: 1,
-      renderCell: (params) => params?.row?.created_date && dayjs(params?.row?.created_date).format("MMM D, YYYY HH:mm"),
+      field: 'line_id',
+      headerName: 'Line id',
+      flex: 1
     },
     {
       type: "actions",
       flex: 1,
       renderCell: (params) =>
-        <Link style={{ color: "blue", cursor: 'pointer' }} onClick={ () => navigate(`/app/manage-user/info/${params?.row?.shortid}`) }>
+        <Link style={{ color: "blue", cursor: 'pointer' }} onClick={ () => navigate(`/app/manage-seller/info/${params?.row?.shortid}`) }>
           แก้ไข
         </Link>
     },
@@ -68,7 +71,7 @@ export default function ManageCustomer() {
   return (
     <>
       <Helmet>
-        <title>จัดการผู้ใช้งาน | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
+        <title>จัดการตัวแทน | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
       </Helmet>
       <Box style={{ padding: "32px" }}>
         <Grid container spacing={2} justifyContent="flex-end">
@@ -76,7 +79,7 @@ export default function ManageCustomer() {
             <Box component="form" noValidate autoComplete="off" mb={2}>
               <Grid container spacing={1} justifyContent="flex-start">
                 <Grid item xs={1}>
-                  <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100%" }} onClick={ () => navigate(`/app/manage-user/new`)} >เพิ่มผู้ใช้</Button>
+                  <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100%" }} onClick={ () => navigate(`/app/manage-seller/new`)} >เพิ่มตัวแทน</Button>
                 </Grid>
               </Grid>
             </Box>

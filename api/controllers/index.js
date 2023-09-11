@@ -174,6 +174,7 @@ exports.update_user = async (req, res) => {
         if(data.fname) user.fname = data.fname;
         if(data.lname) user.lname = data.lname;
         if(data.role) user.role = data.role;
+        if(data.phone) user.phone = data.phone;
 
         await user.save();
 

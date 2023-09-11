@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function ManageUserCreate() {
+export default function ManageSeller() {
   const [state, setState] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export default function ManageUserCreate() {
   }, []); // eslint-disable-line
 
   const fetchUser = async (payload = {}) => {
-    const res = await ApiHelper.getUser(payload);
+    const res = await ApiHelper.getSeller(payload);
     if(res?.status === "ok"){
       setState(res?.data)
     }
@@ -26,14 +26,14 @@ export default function ManageUserCreate() {
   const submitUser = async (payload = {}) => {
     if(id){
       payload.id = id;
-      const res = await ApiHelper.updateUser(payload);
+      const res = await ApiHelper.updateSeller(payload);
       if(res?.status === "ok"){
-        navigate(`/app/manage-user/`);
+        navigate(`/app/manage-seller/`);
       }
     }else{
-      const res = await ApiHelper.createUser(payload);
+      const res = await ApiHelper.createSeller(payload);
       if(res?.status === "ok"){
-        navigate(`/app/manage-user/`);
+        navigate(`/app/manage-seller/`);
       }
     }
   };
@@ -45,18 +45,32 @@ export default function ManageUserCreate() {
   return (
     <>
       <Helmet>
-        <title>เพิ่มผู้ใช้งาน | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
+        <title>เพิ่มตัวแทน | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
       </Helmet>
       <Box style={{ padding: "32px 32px 0px 32px" }}>
         <Typography sx={{ mb: 2, fontSize: "16px" }} gutterBottom>
-          { id ? "แก้ไขผู้ใช้งาน" : "เพิ่มผู้ใช้งาน" }
+          { id ? "แก้ไขตัวแทน" : "เพิ่มตัวแทน" }
         </Typography>
         <Card>
           <CardContent>
             <Box component="form" noValidate autoComplete="off" sx={{ px: 2 }}>
               <Grid container rowSpacing={3} columnSpacing={3} mt={1}>
                 <Grid item xs={12} sx={{ paddingTop: "0 !important" }}>
-                  <Typography variant="h5">รายละเอียดผู้ใช้งาน</Typography>
+                  <Typography variant="h5">รายละเอียดตัวแทน</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="merchant-name-field"
+                    label="รหัสตัวแทน *"
+                    size="small"
+                    name="seller_id"
+                    value={state?.seller_id || ""}
+                    error={state?.seller_id === ""}
+                    fullWidth
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                    autoComplete='off'
+                  />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
@@ -76,13 +90,12 @@ export default function ManageUserCreate() {
                 <Grid item xs={6}>
                   <TextField
                     id="merchant-name-field"
-                    label="พาสเวิร์ด *"
+                    label="Line id *"
                     size="small"
-                    value={state?.password || ""}
-                    error={state?.password === ""}
-                    name="password"
+                    value={state?.line_id || ""}
+                    error={state?.line_id === ""}
+                    name="line_id"
                     fullWidth
-                    type="password"
                     onChange={handleChange}
                     InputLabelProps={{ shrink: true }}
                     autoComplete='off'
@@ -132,32 +145,35 @@ export default function ManageUserCreate() {
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
-                    select
                     id="type-select"
-                    label="ประเภทผู้ใช้งาน *"
+                    label="ชื่อร้าน *"
                     size="small"
-                    name="role"
-                    value={state?.role || "0"}
-                    error={state?.role === ""}
+                    name="shop_name"
+                    value={state?.shop_name || ""}
+                    error={state?.shop_name === ""}
                     fullWidth
                     onChange={handleChange}
                     InputLabelProps={{ shrink: true }}
                     autoComplete='off'
-                  >
-                    <MenuItem disabled value={"0"}>
-                      โปรดเลือกประเภทผู้ใช้งาน
-                    </MenuItem>
-                    <MenuItem key={"user"} value={"user"}>
-                      พนักงาน
-                    </MenuItem>
-                    <MenuItem key={"admin"} value={"admin"}>
-                      เจ้าของร้าน
-                    </MenuItem>
-                  </TextField>
+                  />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button sx={{ border: "1px solid blue", color: "blue", margin: "5px" }} onClick={ () => navigate(`/app/manage-user/`) }>กลับสู่หน้าผู้ใช้งาน</Button>
-                  <Button sx={{ backgroundColor: "green !important;", color: "white", fontSize: "15px", margin: "5px" }} onClick={() => submitUser({ data: state })}>{ id ? "แก้ไขผู้ใช้งาน" : "เพิ่มผู้ใช้งาน" }</Button>
+                  <TextField
+                    id="merchant-name-field"
+                    label="ที่อยู่ *"
+                    size="small"
+                    value={state?.address || ""}
+                    error={state?.address === ""}
+                    name="address"
+                    fullWidth
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                    autoComplete='off'
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button sx={{ border: "1px solid blue", color: "blue", margin: "5px" }} onClick={ () => navigate(`/app/manage-seller/`) }>กลับสู่หน้าตัวแทน</Button>
+                  <Button sx={{ backgroundColor: "green !important;", color: "white", fontSize: "15px", margin: "5px" }} onClick={() => submitUser({ data: state })}>{ id ? "แก้ไขตัวแทน" : "เพิ่มตัวแทน" }</Button>
                 </Grid>
               </Grid>
             </Box>

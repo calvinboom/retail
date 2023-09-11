@@ -3,29 +3,28 @@ import { Card, Box, Grid, Button, Link } from '@material-ui/core';
 import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { DataGrid } from '@mui/x-data-grid';
-import dayjs from "dayjs";
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { useNavigate } from "react-router-dom";
 
-export default function ManageCustomer() {
+export default function ManageUser() {
   const [items, setItems] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (items == null) {
-      fetchTransaction();
+      fetchCustomer();
     }
   }, []); // eslint-disable-line
 
-  const fetchTransaction = async (payload = {}) => {
-    const res = await ApiHelper.getUsers(payload);
+  const fetchCustomer = async (payload = {}) => {
+    const res = await ApiHelper.getCustomers(payload);
     setItems(res?.data);
   };
 
   const columns = [
     {
-      field: 'email',
-      headerName: 'อีเมล',
+      field: 'customer_id',
+      headerName: 'รหัสสมาชิก',
       flex: 1,
     },
     {
@@ -44,22 +43,27 @@ export default function ManageCustomer() {
       flex: 1
     },
     {
-      field: 'role',
-      headerName: 'ตำแหน่ง',
+      field: 'rank',
+      headerName: 'ระดับชั้น',
       flex: 1,
-      renderCell: (params) => params?.row?.role === "user" ? "พนักงาน" : "เจ้าของร้าน",
+      renderCell: (params) => params?.row?.rank[0].toUpperCase() + params?.row?.rank.slice(1),
     },
     {
-      field: 'created_date',
-      headerName: 'วันที่สร้าง',
+      field: 'point',
+      headerName: 'แต้มสะสม',
+      flex: 1
+    },
+    {
+      field: 'sp_detail',
+      headerName: 'ส่วนลดพิเศษ',
       flex: 1,
-      renderCell: (params) => params?.row?.created_date && dayjs(params?.row?.created_date).format("MMM D, YYYY HH:mm"),
+      renderCell: (params) => params?.row?.sp_detail + "%",
     },
     {
       type: "actions",
       flex: 1,
       renderCell: (params) =>
-        <Link style={{ color: "blue", cursor: 'pointer' }} onClick={ () => navigate(`/app/manage-user/info/${params?.row?.shortid}`) }>
+        <Link style={{ color: "blue", cursor: 'pointer' }} onClick={ () => navigate(`/app/manage-customer/info/${params?.row?.shortid}`) }>
           แก้ไข
         </Link>
     },
@@ -68,7 +72,7 @@ export default function ManageCustomer() {
   return (
     <>
       <Helmet>
-        <title>จัดการผู้ใช้งาน | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
+        <title>จัดการสมาชิก | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
       </Helmet>
       <Box style={{ padding: "32px" }}>
         <Grid container spacing={2} justifyContent="flex-end">
@@ -76,7 +80,7 @@ export default function ManageCustomer() {
             <Box component="form" noValidate autoComplete="off" mb={2}>
               <Grid container spacing={1} justifyContent="flex-start">
                 <Grid item xs={1}>
-                  <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100%" }} onClick={ () => navigate(`/app/manage-user/new`)} >เพิ่มผู้ใช้</Button>
+                  <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100%" }} onClick={ () => navigate(`/app/manage-customer/new`)} >เพิ่มสมาชิก</Button>
                 </Grid>
               </Grid>
             </Box>

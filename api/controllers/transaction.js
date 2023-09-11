@@ -1,25 +1,84 @@
 const Transaction = require('../models/transactions');
 const Item = require('../models/items');
+const Customer = require('../models/customers');
+const User = require('../models/users');
 const utils = require('../lib/utils');
 const moment = require('moment');
 
 exports.create_transaction = async (req, res) => {
-    let { data, payment_type } = req.body;
+    let { data, payment_type, customer_shortid, sell_user_shortid } = req.body;
+
     if(data){
         let payment_data = [];
+        let customer;
+        let total_price = 0.0;
+
+        if(customer_shortid !== null || customer_shortid !== undefined){
+            customer = await Customer.findOne({ shortid: customer_shortid });
+        }else{
+            customer._id = null;
+        }
+
+        let sell_user = await User.findOne({ shortid: sell_user_shortid });
+
         for(let index in data){
             let item = await Item.findOne({ shortid: data[index].prod_id });
-            let buy_price = Number(item.buy_price) * Number(data[index].qty);
-            let profit = Number(data[index].price) - Number(buy_price);
-            payment_data.push({
-                name: data[index].name,
-                qty: data[index].qty,
-                sell_price: data[index].price,
-                buy_price: buy_price,
-                profit: profit,
-                type: item.type,
-                payment_type: payment_type
-            })
+
+            if(customer_shortid !== null || customer_shortid !== undefined){
+                let buy_price = Number(item.buy_price) * Number(data[index].qty);
+                let calculate_price = data[index].price - (data[index].price * Number("0.0"+String(customer.sp_detail)));
+                let profit = Number(calculate_price) - Number(buy_price);
+                total_price = total_price + calculate_price;
+
+                payment_data.push({
+                    name: data[index].name,
+                    qty: data[index].qty,
+                    sell_price: calculate_price,
+                    buy_price: buy_price,
+                    profit: profit,
+                    type: item.type,
+                    payment_type: payment_type,
+                    customer: customer._id,
+                    sell_user: sell_user._id
+                })
+            }else{
+                let buy_price = Number(item.buy_price) * Number(data[index].qty);
+                let profit = Number(data[index].price) - Number(buy_price);
+                total_price = total_price + data[index].price;
+                payment_data.push({
+                    name: data[index].name,
+                    qty: data[index].qty,
+                    sell_price: data[index].price,
+                    buy_price: buy_price,
+                    profit: profit,
+                    type: item.type,
+                    payment_type: payment_type,
+                    customer: customer._id,
+                    sell_user: sell_user._id
+                })
+            }
+        }
+
+        if(customer_shortid !== null || customer_shortid !== undefined){
+            let cal_point = total_price * 0.05;
+            customer.point = customer.point + cal_point;
+            if(customer.point > 1001){
+                customer.rank = "silver";
+                customer.sp_detail = 4;
+            }
+            if(customer.point > 3001){
+                customer.rank = "gold";
+                customer.sp_detail = 5;
+            }
+            if(customer.point > 7001){
+                customer.rank = "platinum";
+                customer.sp_detail = 6;
+            }
+            if(customer.point > 10001){
+                customer.rank = "diamond";
+                customer.sp_detail = 7;
+            }
+            await customer.save();
         }
         
         let create_tx = await Transaction.create(payment_data);
@@ -49,13 +108,12 @@ exports.get_transaction = async (req, res) => {
     const { start, end , order, length } = req.body;
     let sort_direction = "asc";
     let transactions;
-
     if(order) sort_direction = order.sort;
 
     if(length){
         transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } }).sort({ created_date: sort_direction }).limit(length);
     }else{
-        transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } }).sort({ created_date: sort_direction });
+        transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } }).sort({ created_date: sort_direction }).populate('customer').populate('sell_user');
     }
     
     if (transactions) {

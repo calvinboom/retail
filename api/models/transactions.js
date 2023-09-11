@@ -15,6 +15,8 @@ const transactionsSchema = mongoose.Schema({
     image: { type: String, default: null },
     barcode: { type: String, default: null },
     payment_type: { type: String, default: null },
+    customer: { type:mongoose.Schema.Types.ObjectId, ref: 'Customer', required: false },
+    sell_user: { type:mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     created_date: { type: Date, default: Date.now },
     updated_date: { type: Date, default: Date.now }
 });

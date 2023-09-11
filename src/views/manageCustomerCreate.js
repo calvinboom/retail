@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function ManageUserCreate() {
+export default function ManageCustomerCreate() {
   const [state, setState] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export default function ManageUserCreate() {
   }, []); // eslint-disable-line
 
   const fetchUser = async (payload = {}) => {
-    const res = await ApiHelper.getUser(payload);
+    const res = await ApiHelper.getCustomer(payload);
     if(res?.status === "ok"){
       setState(res?.data)
     }
@@ -26,14 +26,14 @@ export default function ManageUserCreate() {
   const submitUser = async (payload = {}) => {
     if(id){
       payload.id = id;
-      const res = await ApiHelper.updateUser(payload);
+      const res = await ApiHelper.updateCustomer(payload);
       if(res?.status === "ok"){
-        navigate(`/app/manage-user/`);
+        navigate(`/app/manage-customer/`);
       }
     }else{
-      const res = await ApiHelper.createUser(payload);
+      const res = await ApiHelper.createCustomer(payload);
       if(res?.status === "ok"){
-        navigate(`/app/manage-user/`);
+        navigate(`/app/manage-customer/`);
       }
     }
   };
@@ -45,44 +45,28 @@ export default function ManageUserCreate() {
   return (
     <>
       <Helmet>
-        <title>เพิ่มผู้ใช้งาน | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
+        <title>จัดการสมาชิก | ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก</title>
       </Helmet>
       <Box style={{ padding: "32px 32px 0px 32px" }}>
         <Typography sx={{ mb: 2, fontSize: "16px" }} gutterBottom>
-          { id ? "แก้ไขผู้ใช้งาน" : "เพิ่มผู้ใช้งาน" }
+          { id ? "แก้ไขสมาชิก" : "เพิ่มสมาชิก" }
         </Typography>
         <Card>
           <CardContent>
             <Box component="form" noValidate autoComplete="off" sx={{ px: 2 }}>
               <Grid container rowSpacing={3} columnSpacing={3} mt={1}>
                 <Grid item xs={12} sx={{ paddingTop: "0 !important" }}>
-                  <Typography variant="h5">รายละเอียดผู้ใช้งาน</Typography>
+                  <Typography variant="h5">รายละเอียดสมาชิก</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <TextField
                     id="merchant-name-field"
-                    label="อีเมล *"
+                    label="รหัสสมาชิก *"
                     size="small"
-                    name="email"
-                    value={state?.email || ""}
-                    error={state?.email === ""}
-                    type="email"
+                    value={state?.customer_id || ""}
+                    error={state?.customer_id === ""}
+                    name="customer_id"
                     fullWidth
-                    onChange={handleChange}
-                    InputLabelProps={{ shrink: true }}
-                    autoComplete='off'
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    id="merchant-name-field"
-                    label="พาสเวิร์ด *"
-                    size="small"
-                    value={state?.password || ""}
-                    error={state?.password === ""}
-                    name="password"
-                    fullWidth
-                    type="password"
                     onChange={handleChange}
                     InputLabelProps={{ shrink: true }}
                     autoComplete='off'
@@ -134,30 +118,53 @@ export default function ManageUserCreate() {
                   <TextField
                     select
                     id="type-select"
-                    label="ประเภทผู้ใช้งาน *"
+                    label="ระดับชั้น *"
                     size="small"
-                    name="role"
-                    value={state?.role || "0"}
-                    error={state?.role === ""}
+                    name="rank"
+                    value={state?.rank || "0"}
+                    error={state?.rank === ""}
                     fullWidth
                     onChange={handleChange}
                     InputLabelProps={{ shrink: true }}
                     autoComplete='off'
                   >
                     <MenuItem disabled value={"0"}>
-                      โปรดเลือกประเภทผู้ใช้งาน
+                      โปรดเลือกระดับชั้น
                     </MenuItem>
-                    <MenuItem key={"user"} value={"user"}>
-                      พนักงาน
+                    <MenuItem key={"bronze"} value={"bronze"}>
+                      Bronze
                     </MenuItem>
-                    <MenuItem key={"admin"} value={"admin"}>
-                      เจ้าของร้าน
+                    <MenuItem key={"silver"} value={"silver"}>
+                      Silver
+                    </MenuItem>
+                    <MenuItem key={"gold"} value={"gold"}>
+                      Gold
+                    </MenuItem>
+                    <MenuItem key={"platinum"} value={"platinum"}>
+                      Platinum
+                    </MenuItem>
+                    <MenuItem key={"diamond"} value={"diamond"}>
+                      Diamond
                     </MenuItem>
                   </TextField>
                 </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    id="merchant-name-field"
+                    label="ที่อยู่ *"
+                    size="small"
+                    value={state?.address || ""}
+                    error={state?.address === ""}
+                    name="address"
+                    fullWidth
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                    autoComplete='off'
+                  />
+                </Grid>
                 <Grid item xs={12}>
-                  <Button sx={{ border: "1px solid blue", color: "blue", margin: "5px" }} onClick={ () => navigate(`/app/manage-user/`) }>กลับสู่หน้าผู้ใช้งาน</Button>
-                  <Button sx={{ backgroundColor: "green !important;", color: "white", fontSize: "15px", margin: "5px" }} onClick={() => submitUser({ data: state })}>{ id ? "แก้ไขผู้ใช้งาน" : "เพิ่มผู้ใช้งาน" }</Button>
+                  <Button sx={{ border: "1px solid blue", color: "blue", margin: "5px" }} onClick={ () => navigate(`/app/manage-customer/`) }>กลับสู่หน้าสมาชิก</Button>
+                  <Button sx={{ backgroundColor: "green !important;", color: "white", fontSize: "15px", margin: "5px" }} onClick={() => submitUser({ data: state })}>{ id ? "แก้ไขสมาชิก" : "เพิ่มผู้สมาชิก" }</Button>
                 </Grid>
               </Grid>
             </Box>

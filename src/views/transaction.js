@@ -57,31 +57,43 @@ export default function Transaction() {
     {
       field: 'qty',
       headerName: 'จำนวน',
-      flex: 1,
+      maxWidth: 80
     },
     {
       field: 'buy_price',
       headerName: 'ต้นทุน',
-      flex: 1,
-      renderCell: (params) => params?.row?.buy_price + " ฿",
+      maxWidth: 110,
+      renderCell: (params) => params?.row?.buy_price.toLocaleString(undefined, {minimumFractionDigits: 2}) + " ฿",
     },
     {
       field: 'sell_price',
       headerName: 'ราคาขาย',
-      flex: 1,
-      renderCell: (params) => params?.row?.sell_price + " ฿",
+      maxWidth: 110,
+      renderCell: (params) => params?.row?.sell_price.toLocaleString(undefined, {minimumFractionDigits: 2}) + " ฿",
     },
     {
       field: 'profit',
       headerName: 'กำไร',
-      flex: 1,
-      renderCell: (params) => params?.row?.profit + " ฿",
+      maxWidth: 110,
+      renderCell: (params) => params?.row?.profit.toLocaleString(undefined, {minimumFractionDigits: 2}) + " ฿",
     },
     {
       field: 'payment_type',
       headerName: 'จ่ายด้วย',
-      flex: 1,
+      maxWidth: 100,
       renderCell: (params) => params?.row?.payment_type === "cash" ? "เงินสด" : "QR พร้อมเพย์",
+    },
+    {
+      field: 'customer',
+      headerName: 'ซื้อโดย',
+      flex: 1,
+      renderCell: (params) => params?.row?.customer ? `${params?.row?.customer?.fname} (${params?.row?.customer?.rank[0].toUpperCase() + params?.row?.customer?.rank.slice(1)})` : "",
+    },
+    {
+      field: 'sell_user',
+      headerName: 'ขายโดย',
+      flex: 1,
+      renderCell: (params) => params?.row?.sell_user ? `${params?.row?.sell_user?.fname} (${params?.row?.sell_user?.role == "admin" ? "เจ้าของร้าน" : "พนักงาน" })` : "",
     },
     {
       field: 'created_date',
@@ -182,13 +194,13 @@ export default function Transaction() {
                   </DateRangePicker>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography>ต้นทุนรวม: {state?.total_buy} บาท</Typography>
+                  <Typography>ต้นทุนรวม: {state?.total_buy?.toLocaleString(undefined, {minimumFractionDigits: 2})} บาท</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography>ราคาขายรวม: {state?.total_sell} บาท</Typography>
+                  <Typography>ราคาขายรวม: {state?.total_sell?.toLocaleString(undefined, {minimumFractionDigits: 2})} บาท</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography>กำไรรวม: {state?.total_profit} บาท</Typography>
+                  <Typography>กำไรรวม: {state?.total_profit?.toLocaleString(undefined, {minimumFractionDigits: 2})} บาท</Typography>
                 </Grid>
               </Grid>
             </Box>

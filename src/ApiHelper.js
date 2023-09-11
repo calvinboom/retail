@@ -14,7 +14,15 @@ const exportedObject = {
     getUsers,
     getUser,
     createUser,
-    updateUser
+    updateUser,
+    getSellers,
+    getSeller,
+    createSeller,
+    updateSeller,
+    getCustomers,
+    getCustomer,
+    createCustomer,
+    updateCustomer
 };
 
 async function loginUser(data = {}) {
@@ -96,6 +104,62 @@ async function createUser(data = {}) {
 
 async function updateUser(data = {}) {
   return axios.post(`${BASE_API_URL}/api/update-user`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function getSellers(data = {}) {
+  return axios.get(`${BASE_API_URL}/api/sellers`)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function getSeller(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/sellers`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function createSeller(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/sellers/create`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function updateSeller(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/sellers/update`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function getCustomers(data = {}) {
+  return axios.get(`${BASE_API_URL}/api/customers`)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function getCustomer(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/customers`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function createCustomer(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/customers/create`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function updateCustomer(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/customers/update`, data)
     .then(res => {
       return res?.data
     })
