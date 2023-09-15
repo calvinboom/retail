@@ -17,6 +17,7 @@ const transactionsSchema = mongoose.Schema({
     payment_type: { type: String, default: null },
     customer: { type:mongoose.Schema.Types.ObjectId, ref: 'Customer', required: false },
     sell_user: { type:mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    tx_id: { type: String },
     created_date: { type: Date, default: Date.now },
     updated_date: { type: Date, default: Date.now }
 });

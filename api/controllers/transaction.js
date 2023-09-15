@@ -6,17 +6,20 @@ const utils = require('../lib/utils');
 const moment = require('moment');
 
 exports.create_transaction = async (req, res) => {
-    let { data, payment_type, customer_shortid, sell_user_shortid } = req.body;
+    let { data, payment_type, customer_shortid, sell_user_shortid, tx_id } = req.body;
+    console.log("req.body", req.body)
 
     if(data){
         let payment_data = [];
         let customer;
         let total_price = 0.0;
 
-        if(customer_shortid !== null || customer_shortid !== undefined){
+        if(customer_shortid != null || customer_shortid != undefined){
             customer = await Customer.findOne({ shortid: customer_shortid });
         }else{
-            customer._id = null;
+            customer = { 
+                _id: null
+            };
         }
 
         let sell_user = await User.findOne({ shortid: sell_user_shortid });
@@ -24,7 +27,7 @@ exports.create_transaction = async (req, res) => {
         for(let index in data){
             let item = await Item.findOne({ shortid: data[index].prod_id });
 
-            if(customer_shortid !== null || customer_shortid !== undefined){
+            if(customer_shortid != null || customer_shortid != undefined){
                 let buy_price = Number(item.buy_price) * Number(data[index].qty);
                 let calculate_price = data[index].price - (data[index].price * Number("0.0"+String(customer.sp_detail)));
                 let profit = Number(calculate_price) - Number(buy_price);
@@ -39,7 +42,8 @@ exports.create_transaction = async (req, res) => {
                     type: item.type,
                     payment_type: payment_type,
                     customer: customer._id,
-                    sell_user: sell_user._id
+                    sell_user: sell_user._id,
+                    tx_id: tx_id
                 })
             }else{
                 let buy_price = Number(item.buy_price) * Number(data[index].qty);
@@ -54,12 +58,13 @@ exports.create_transaction = async (req, res) => {
                     type: item.type,
                     payment_type: payment_type,
                     customer: customer._id,
-                    sell_user: sell_user._id
+                    sell_user: sell_user._id,
+                    tx_id: tx_id
                 })
             }
         }
 
-        if(customer_shortid !== null || customer_shortid !== undefined){
+        if(customer_shortid != null || customer_shortid != undefined){
             let cal_point = total_price * 0.05;
             customer.point = customer.point + cal_point;
             if(customer.point > 1001){

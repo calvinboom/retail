@@ -113,8 +113,6 @@ export default function SellingPage() {
     let res = await ApiHelper.createTransaction(data);
     if(res?.status === "ok"){
       localStorage.removeItem("cart");
-      setCart([]);
-      setTotalPrice(0);
       return true;
     }
   };
@@ -220,7 +218,7 @@ export default function SellingPage() {
                   />
                 </Box>
                 <Typography style={{ fontSize: "19px" }}>ราคารวม { totalPrice } บาท</Typography>
-                <PaymentCard totalPrice={totalPrice} createTransaction={createTransaction} cart={cart} />
+                <PaymentCard totalPrice={totalPrice} createTransaction={createTransaction} cart={cart} setCart={setCart} setTotalPrice={setTotalPrice} />
               </CardContent>
             </Card>
           </Grid>
