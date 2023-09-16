@@ -7,7 +7,6 @@ const moment = require('moment');
 
 exports.create_transaction = async (req, res) => {
     let { data, payment_type, customer_shortid, sell_user_shortid, tx_id } = req.body;
-    console.log("req.body", req.body)
 
     if(data){
         let payment_data = [];
@@ -110,7 +109,7 @@ exports.create_transaction = async (req, res) => {
 }
 
 exports.get_transaction = async (req, res) => {
-    const { start, end , order, length } = req.body;
+    const { start, end , order, length, tx_id } = req.body;
     let sort_direction = "asc";
     let transactions;
     if(order) sort_direction = order.sort;
@@ -118,7 +117,11 @@ exports.get_transaction = async (req, res) => {
     if(length){
         transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } }).sort({ created_date: sort_direction }).limit(length);
     }else{
-        transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } }).sort({ created_date: sort_direction }).populate('customer').populate('sell_user');
+        if(tx_id && tx_id != '' && !start && !end){
+            transactions = await Transaction.find({ tx_id: tx_id }).populate('customer').populate('sell_user');
+        }else{
+            transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } }).sort({ created_date: sort_direction }).populate('customer').populate('sell_user');
+        }
     }
     
     if (transactions) {
@@ -138,7 +141,6 @@ exports.get_transaction = async (req, res) => {
 
 exports.get_transaction_report = async (req, res) => {
     const { start, end, type } = req.body;
-    console.log(req.body)
     if(type == "recent"){
         let transactions = await Transaction.find({ created_date: { "$gte": moment.utc(start).toDate(), "$lte": moment.utc(end).toDate() } });
         if (transactions) {

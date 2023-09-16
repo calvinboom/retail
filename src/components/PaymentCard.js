@@ -3,6 +3,7 @@ import { Typography, Modal, Card, CardHeader, CardContent, Box, Divider, Grid, B
 import SweetAlert2 from "react-sweetalert2";
 import ApiHelper from '../ApiHelper';
 import html2canvas from 'html2canvas';
+import ReactToPrint from 'react-to-print';
 const moment = require('moment');
 
 const style = {
@@ -16,6 +17,7 @@ const style = {
 const PaymentCard = (props) => {
     let { totalPrice, createTransaction, cart, setCart, setTotalPrice } = props;
     const printRef = useRef();
+    const pngRef = useRef();
     const user = JSON.parse(localStorage.getItem('user'));
 
     const [modalState, setModalState] = useState(1);
@@ -50,7 +52,7 @@ const PaymentCard = (props) => {
     };
 
     const onClose = async () => {
-        if(modalState === 2){
+        if (modalState === 2) {
             setCart([]);
             setTotalPrice(0);
         }
@@ -59,7 +61,7 @@ const PaymentCard = (props) => {
     };
 
     const handleDownloadImage = async () => {
-        const element = printRef.current;
+        const element = pngRef.current;
         const canvas = await html2canvas(element);
 
         const data = canvas.toDataURL('image/png');
@@ -155,7 +157,10 @@ const PaymentCard = (props) => {
                                 <CardContent>
                                     <Divider />
                                     <Box sx={{ width: "100%", mt: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                        <Button style={{ backgroundColor: "blue", color: "white", fontSize: "16px", width: "40%", marginLeft: "5px", marginBottom: "15px" }} onClick={() => setPaymentType("qr")}>พิมพ์ใบเสร็จ</Button>
+                                        <ReactToPrint
+                                            trigger={() => <Button style={{ backgroundColor: "blue", color: "white", fontSize: "16px", width: "40%", marginLeft: "5px", marginBottom: "15px" }}>พิมพ์ใบเสร็จ</Button>}
+                                            content={() => printRef.current}
+                                        />
                                         <Button style={{ backgroundColor: "grey", color: "white", fontSize: "16px", width: "40%", marginLeft: "5px", marginBottom: "15px" }} onClick={() => handleDownloadImage()}>บันทึกใบเสร็จเป็นรูป</Button>
                                     </Box>
                                     <Grid container justifyContent={"flex-start"} sx={{ mt: 2 }}>
@@ -171,96 +176,98 @@ const PaymentCard = (props) => {
                     }
                 </Box>
             </Modal>
-            <div ref={printRef} style={{ width: "370px", fontSize: "14px", position: "fixed", zIndex: "-1" }}>
-                <table style={{ width: "100%" }}>
-                    <tr>
-                        ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก
-                    </tr>
-                    <tr>
-                        TXID: {txId}
-                    </tr>
-                    <tr>
-                        ใบเสร็จรับเงิน
-                    </tr>
-                </table>
-                -----------------------------------------------------------------------------
-                <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
-                    <tr>
-                        <td style={{ textAlign: "left", minWidth: "90px" }}>รายการ</td>
-                        <td style={{ textAlign: "right", minWidth: "40px" }}>จำนวน</td>
-                        <td style={{ textAlign: "right", minWidth: "50px" }}>ราคา</td>
-                        <td style={{ textAlign: "right", minWidth: "50px" }}>ราคารวม</td>
-                    </tr>
-                </table>
-                -----------------------------------------------------------------------------
-                <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
-                    {
-                        cart?.map((element) => {
-                            let tr_data = <>
-                                <tr>
-                                    <td style={{ textAlign: "left", minWidth: "90px" }}>{element.name}</td>
-                                    <td style={{ textAlign: "right", minWidth: "40px" }}>{element.qty}</td>
-                                    <td style={{ textAlign: "right", minWidth: "50px" }}>{(Number(element.price) / Number(element.qty)).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                    <td style={{ textAlign: "right", minWidth: "50px" }}>{Number(element.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                </tr>
-                            </>
-                            return tr_data;
-                        })
-                    }
-                </table>
-                -----------------------------------------------------------------------------
-                <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
-                    <tr>
-                        <td style={{ textAlign: "left" }}>รวม</td>
-                        <td></td>
-                        <td></td>
-                        <td style={{ textAlign: "right" }}>{Number(totalPrice).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                    </tr>
-                </table>
-                -----------------------------------------------------------------------------
-                <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
-                    <tr>
-                        <td style={{ textAlign: "left" }}>ส่วนลด</td>
-                        <td></td>
-                        <td></td>
-                        <td style={{ textAlign: "right" }}>{value !== null ? value?.sp_detail : 0}%</td>
-                    </tr>
-                    <tr>
-                        <td style={{ textAlign: "left" }}>สุทธิ</td>
-                        <td></td>
-                        <td></td>
-                        <td style={{ textAlign: "right" }}>{ value !== null ? Number(Number(totalPrice) - Number(totalPrice)*Number("0.0"+String(value?.sp_detail))).toLocaleString(undefined, { minimumFractionDigits: 2 }) : totalPrice }</td>
-                    </tr>
-                </table>
-                -----------------------------------------------------------------------------
-                <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
-                    <tr>
-                        <td style={{ textAlign: "left" }}>เงินทอน</td>
-                        <td></td>
-                        <td></td>
-                        <td style={{ textAlign: "right" }}>{Number(0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                    </tr>
-                    <tr>
-                        <td style={{ textAlign: "left" }}>ชำระด้วย</td>
-                        <td></td>
-                        <td></td>
-                        <td style={{ textAlign: "right" }}>{paymentType === "qr" ? "พร้อมเพย์" : "เงินสด" }</td>
-                    </tr>
-                </table>
-                -----------------------------------------------------------------------------
-                <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
-                    <tr>
-                        <td style={{ textAlign: "left" }}>พนักงาน</td>
-                        <td></td>
-                        <td></td>
-                        <td style={{ textAlign: "right" }}>{user.fname}</td>
-                    </tr>
-                </table>
-                <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px", marginTop: '50px' }}>
-                    <tr>
-                        ** วันที่ {moment().format('DD/MM/YYYY HH:mm:ss')} **
-                    </tr>
-                </table>
+            <div ref={printRef} style={{ textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "space-between", zIndex: "-1" }}>
+                <div ref={pngRef} style={{ width: "370px", fontSize: "14px", position: "fixed", zIndex: "-1" }}>
+                    <table style={{ width: "100%" }}>
+                        <tr>
+                            ระบบบริหารจัดการร้านค้าปลีกขนาดเล็ก
+                        </tr>
+                        <tr>
+                            TXID: {txId}
+                        </tr>
+                        <tr>
+                            ใบเสร็จรับเงิน
+                        </tr>
+                    </table>
+                    -----------------------------------------------------------------------------
+                    <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
+                        <tr>
+                            <td style={{ textAlign: "left", minWidth: "90px" }}>รายการ</td>
+                            <td style={{ textAlign: "right", minWidth: "40px" }}>จำนวน</td>
+                            <td style={{ textAlign: "right", minWidth: "50px" }}>ราคา</td>
+                            <td style={{ textAlign: "right", minWidth: "50px" }}>ราคารวม</td>
+                        </tr>
+                    </table>
+                    -----------------------------------------------------------------------------
+                    <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
+                        {
+                            cart?.map((element) => {
+                                let tr_data = <>
+                                    <tr>
+                                        <td style={{ textAlign: "left", minWidth: "90px" }}>{element.name}</td>
+                                        <td style={{ textAlign: "right", minWidth: "40px" }}>{element.qty}</td>
+                                        <td style={{ textAlign: "right", minWidth: "50px" }}>{(Number(element.price) / Number(element.qty)).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                        <td style={{ textAlign: "right", minWidth: "50px" }}>{Number(element.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                    </tr>
+                                </>
+                                return tr_data;
+                            })
+                        }
+                    </table>
+                    -----------------------------------------------------------------------------
+                    <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
+                        <tr>
+                            <td style={{ textAlign: "left" }}>รวม</td>
+                            <td></td>
+                            <td></td>
+                            <td style={{ textAlign: "right" }}>{Number(totalPrice).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                        </tr>
+                    </table>
+                    -----------------------------------------------------------------------------
+                    <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
+                        <tr>
+                            <td style={{ textAlign: "left" }}>ส่วนลด</td>
+                            <td></td>
+                            <td></td>
+                            <td style={{ textAlign: "right" }}>{value !== null ? value?.sp_detail : 0}%</td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: "left" }}>สุทธิ</td>
+                            <td></td>
+                            <td></td>
+                            <td style={{ textAlign: "right" }}>{value !== null ? Number(Number(totalPrice) - Number(totalPrice) * Number("0.0" + String(value?.sp_detail))).toLocaleString(undefined, { minimumFractionDigits: 2 }) : totalPrice}</td>
+                        </tr>
+                    </table>
+                    -----------------------------------------------------------------------------
+                    <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
+                        <tr>
+                            <td style={{ textAlign: "left" }}>เงินทอน</td>
+                            <td></td>
+                            <td></td>
+                            <td style={{ textAlign: "right" }}>{Number(0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: "left" }}>ชำระด้วย</td>
+                            <td></td>
+                            <td></td>
+                            <td style={{ textAlign: "right" }}>{paymentType === "qr" ? "พร้อมเพย์" : "เงินสด"}</td>
+                        </tr>
+                    </table>
+                    -----------------------------------------------------------------------------
+                    <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px" }}>
+                        <tr>
+                            <td style={{ textAlign: "left" }}>พนักงาน</td>
+                            <td></td>
+                            <td></td>
+                            <td style={{ textAlign: "right" }}>{user.fname}</td>
+                        </tr>
+                    </table>
+                    <table style={{ width: "100%", paddingLeft: "10px", paddingRight: "10px", marginTop: '50px' }}>
+                        <tr>
+                            ** วันที่ {moment().format('DD/MM/YYYY HH:mm:ss')} **
+                        </tr>
+                    </table>
+                </div>
             </div>
         </>
     );
