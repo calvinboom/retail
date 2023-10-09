@@ -11,7 +11,7 @@ export default function ManageUser() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (items == null) {
+    if (items === null) {
       fetchCustomer();
     }
   }, []); // eslint-disable-line

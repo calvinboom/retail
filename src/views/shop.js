@@ -28,7 +28,7 @@ export default function SellingPage() {
   const [totalPrice, setTotalPrice] = useState(total);
 
   useEffect(() => {
-    if (items == null) {
+    if (items === null) {
       fetchItems(initialFilters);
     }
   }, [totalPrice]); // eslint-disable-line
@@ -50,8 +50,8 @@ export default function SellingPage() {
   };
 
   const updateCart = async (data) => {
-    let check_cart = cart?.filter((element) => element?.prod_id == data?.shortid);
-    if (check_cart?.length == 0) {
+    let check_cart = cart?.filter((element) => element?.prod_id === data?.shortid);
+    if (check_cart?.length === 0) {
       setCart(existingItems => {
         localStorage.setItem('cart', JSON.stringify([
           ...existingItems,

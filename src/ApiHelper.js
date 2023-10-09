@@ -22,7 +22,11 @@ const exportedObject = {
     getCustomers,
     getCustomer,
     createCustomer,
-    updateCustomer
+    updateCustomer,
+    createBuyingItems,
+    getBuyingOrders,
+    getBuyingItemsByPid,
+    updateBuyingStatus
 };
 
 async function loginUser(data = {}) {
@@ -160,6 +164,34 @@ async function createCustomer(data = {}) {
 
 async function updateCustomer(data = {}) {
   return axios.post(`${BASE_API_URL}/api/customers/update`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function createBuyingItems(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/buyitems/create`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function getBuyingOrders(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/buyitems/list`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function getBuyingItemsByPid(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/buyitems/find-by-pid`, data)
+    .then(res => {
+      return res?.data
+    })
+}
+
+async function updateBuyingStatus(data = {}) {
+  return axios.post(`${BASE_API_URL}/api/buyitems/update-status`, data)
     .then(res => {
       return res?.data
     })

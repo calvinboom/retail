@@ -80,7 +80,7 @@ export default function Transaction() {
   };
 
   useEffect(() => {
-    if (items == null) {
+    if (items === null) {
       fetchTransaction({ start: start, end: end });
     }
   }, []); // eslint-disable-line
@@ -109,14 +109,14 @@ export default function Transaction() {
 
   const handleChange = (e) => {
     setTxidData(e.target.value);
-    if (switchState == true) {
+    if (switchState === true) {
       fetchTransaction({ tx_id: e.target.value });
     }
   };
 
   const handleChangeSwitch = (state) => {
     setSwitchState(state);
-    if (state == false) {
+    if (state === false) {
       setTxidData('');
       fetchTransaction({ start: start, end: end });
     }
@@ -167,7 +167,7 @@ export default function Transaction() {
       field: 'sell_user',
       headerName: 'ขายโดย',
       flex: 1,
-      renderCell: (params) => params?.row?.sell_user ? `${params?.row?.sell_user?.fname} (${params?.row?.sell_user?.role == "admin" ? "เจ้าของร้าน" : "พนักงาน"})` : "",
+      renderCell: (params) => params?.row?.sell_user ? `${params?.row?.sell_user?.fname} (${params?.row?.sell_user?.role === "admin" ? "เจ้าของร้าน" : "พนักงาน"})` : "",
     },
     {
       field: 'created_date',
@@ -188,7 +188,7 @@ export default function Transaction() {
             <Box component="form" noValidate autoComplete="off" mb={2}>
               <Grid container spacing={1} justifyContent="flex-end">
                 <Grid item xs={12} sx={{ display: "flex" }}>
-                  {switchState == false &&
+                  {switchState === false &&
                     <DateRangePicker
                       initialSettings={{
                         maxDate: moment().set({ hour: 23, minute: 59, second: 59, millisecond: 0 }),
@@ -267,7 +267,7 @@ export default function Transaction() {
                       </Button>
                     </DateRangePicker>
                   }
-                  {switchState == true &&
+                  {switchState === true &&
                     <TextField
                       id="tx_id"
                       label="TXID *"

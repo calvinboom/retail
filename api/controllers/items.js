@@ -143,17 +143,19 @@ exports.get_items = async (req, res) => {
 }
 
 exports.create_item = async (req, res) => {
-    let { name, type, buy_price, sell_price, barcode } = req.body;
+    let { name, type, buy_price, sell_price, barcode, qty } = req.body;
     let file = req.file;
 
     if(buy_price) buy_price = Number(buy_price);
     if(sell_price) sell_price = Number(sell_price);
+    if(qty) qty = Number(qty);
 
     let data = {
         name: name,
         type: type,
-        buy_price: buy_price,
-        sell_price: sell_price,
+        buy_price: buy_price || 0,
+        sell_price: sell_price || 0,
+        qty: qty || 1,
         barcode: barcode || null
     };
 
@@ -205,11 +207,12 @@ exports.get_item = async (req, res) => {
 }
 
 exports.update_item = async (req, res) => {
-    let { prod_id, name, type, buy_price, sell_price, barcode } = req.body;
+    let { prod_id, name, type, buy_price, sell_price, barcode, qty } = req.body;
     let file = req.file;
 
     if(buy_price) buy_price = Number(buy_price);
     if(sell_price) sell_price = Number(sell_price);
+    if(qty) qty = Number(qty);
 
     let item = await Item.findOne({ _id: prod_id });
 
@@ -217,6 +220,7 @@ exports.update_item = async (req, res) => {
     if(type) item.type = type;
     if(buy_price) item.buy_price = buy_price;
     if(sell_price) item.sell_price = sell_price;
+    if(qty) item.qty = qty;
     if(barcode) item.barcode = barcode;
     if (file) {
         let filesplit = file.filename.split(".");

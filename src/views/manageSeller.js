@@ -12,7 +12,7 @@ export default function ManageSeller() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (items == null) {
+    if (items === null) {
       fetchTransaction();
     }
   }, []); // eslint-disable-line

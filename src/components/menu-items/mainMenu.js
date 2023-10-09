@@ -1,5 +1,5 @@
 // assets
-import { PieChart as PieChartIcon, MessageSquare as MessageSquareIcon, ShoppingBag as ShoppingBagIcon, Package as PackageIcon, UserPlus as UserPlusIcon, Users as UsersIcon, User as UserIcon } from "react-feather";
+import { PieChart as PieChartIcon, MessageSquare as MessageSquareIcon, ShoppingBag as ShoppingBagIcon, Package as PackageIcon, Edit as EditIcon , UserPlus as UserPlusIcon, Users as UsersIcon, User as UserIcon } from "react-feather";
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
 
@@ -26,6 +26,12 @@ const main = [
         href: "/app/product",
         icon: PackageIcon,
         title: "สินค้า",
+        role: [ "user", "admin" ]
+    },
+    {
+        href: "/app/buy-product",
+        icon: EditIcon,
+        title: "สั่งซื้อสินค้า",
         role: [ "user", "admin" ]
     },
     {

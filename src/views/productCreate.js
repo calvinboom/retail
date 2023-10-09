@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Box, Grid, TextField, Typography, Button, MenuItem } from '@material-ui/core';
+import { Card, Box, Grid, TextField, Typography, Button, MenuItem, Modal, CardHeader, Divider } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { useNavigate, useParams } from "react-router-dom";
+import BarcodeScannerComponent from "react-qr-barcode-scanner-updated";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: '90%',
+};
 
 export default function CreateProduct() {
   const [state, setState] = useState({});
@@ -11,6 +20,9 @@ export default function CreateProduct() {
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const [openBarcode, setOpenBarcode] = useState(false);
+  const [data, setData] = useState("Not Found");
 
   useEffect(() => {
     if (id) {
@@ -32,6 +44,7 @@ export default function CreateProduct() {
     }
     formData.append('name', payload.data.name);
     formData.append('type', payload.data.type);
+    formData.append('qty', payload.data.qty);
     formData.append('buy_price', payload.data.buy_price);
     formData.append('sell_price', payload.data.sell_price);
     console.log("formData", formData.values())
@@ -163,6 +176,20 @@ export default function CreateProduct() {
                     autoComplete='off'
                   />
                 </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    id="merchant-name-field"
+                    label="จำนวน *"
+                    size="small"
+                    value={state?.qty || ""}
+                    error={state?.qty === ""}
+                    name="qty"
+                    fullWidth
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                    autoComplete='off'
+                  />
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     id="merchant-name-field"
@@ -172,17 +199,16 @@ export default function CreateProduct() {
                     value={state?.barcode || ""}
                     name="barcode"
                     fullWidth
-                    onChange={handleChange}
                     InputLabelProps={{ shrink: true }}
                     autoComplete='off'
+                    InputProps={{ endAdornment: <Button style={{ backgroundColor: "white", color: "black", fontSize: "14px", width: "70px" }} onClick={() => setOpenBarcode(true)}>แสกน</Button> }}
                   />
                 </Grid>
-                <Grid item xs={12} sx={{ display: "flex", flexDirection: "row" }}>
-                  <img src={state?.image && !imagePreviewUrl ? state?.image : imagePreviewUrl || "/static/no-img.png"} style={{maxWidth: "200px", height: "auto", objectFit: "cover" }} />
-                  <Button
+                <Grid item xs={12}>
+                <Button
                     variant="contained"
                     component="label"
-                    sx={{ width: "100px", height: "40px", marginLeft: '10px' }}
+                    sx={{ width: "100px", height: "40px", marginLeft: '10px', padding: "10px" }}
                   >
                     อัพโหลดรูป
                     <input
@@ -191,6 +217,10 @@ export default function CreateProduct() {
                       onChange={handleUploadImage}
                     />
                   </Button>
+                </Grid>
+                <Grid item xs={12} sx={{ display: "flex", flexDirection: "row" }}>
+                  <img src={state?.image && !imagePreviewUrl ? state?.image : imagePreviewUrl || "/static/no-img.png"} style={{maxWidth: "200px", height: "auto", objectFit: "cover" }} />
+                  
                 </Grid>
                 <Grid item xs={12}>
                   <Button sx={{ border: "1px solid blue", color: "blue", margin: "5px" }} onClick={ () => navigate(`/app/product/`) }>กลับสู่หน้าสินค้า</Button>
@@ -201,6 +231,37 @@ export default function CreateProduct() {
           </CardContent>
         </Card>
       </Box>
+      <Modal open={openBarcode}>
+        <Box sx={{ ...style,}}>
+          <Card>
+            <CardHeader title="สแกนบาร์โค้ด" />
+            <Divider />
+            <CardContent>
+              <BarcodeScannerComponent
+                width={'100%'}
+                height={350}
+                onUpdate={(err, result) => {
+                  if (result){
+                    setData(result.text);
+                    setState({ ...state, barcode: result.text });
+                    setOpenBarcode(false);
+                  }else{
+                    setData("Not Found");
+                  }
+                }}
+              />
+              <p>{data}</p>
+              <Grid container justifyContent={"flex-start"} sx={{ mt: 2 }}>
+                <Grid item>
+                  <Button variant="outlined" onClick={() => setOpenBarcode(false)} sx={{ textTransform: "capitalize" }}>
+                    ปิด
+                  </Button>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Box>
+      </Modal>
     </>
   );
 }

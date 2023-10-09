@@ -17,7 +17,7 @@ export default function Product() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (items == null) {
+    if (items === null) {
       fetchItems(initialFilters);
     }
   }, []); // eslint-disable-line
@@ -61,6 +61,11 @@ export default function Product() {
       headerName: 'ประเภท',
       flex: 1,
       renderCell: (params) => product_type[Number(params?.row?.type) - 1],
+    },
+    {
+      field: 'qty',
+      headerName: 'คงเหลือ',
+      flex: 1,
     },
     {
       field: 'buy_price',
