@@ -1,0 +1,8 @@
+{
+    "port": 3092,
+    "SHORTID_CHARACTERS_NON_SPECIAL": "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "db": {
+        "MONGOOSE_CONNECTION_STR": "mongodb+srv://mtanakrititn:uYoJG4khXJkJxmrV@cluster0.g4lgncx.mongodb.net/db-dev"
+    },
+    "token_secret": "f4ds56f4d5HJIOSHaudad7s5"
+}
