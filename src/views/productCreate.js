@@ -56,6 +56,7 @@ export default function CreateProduct() {
     formData.append('buy_price', payload.data.buy_price);
     formData.append('sell_price', payload.data.sell_price);
     formData.append('expiry_date', payload.data.expiry_date);
+    formData.append('barcode', payload.data.barcode);
 
     if(id){
       formData.append('prod_id', id)

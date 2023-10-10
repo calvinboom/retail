@@ -14,6 +14,7 @@ import ManageCustomer from "./views/manageCustomer";
 import ManageCustomerCreate from "./views/manageCustomerCreate";
 import BuyProduct from "./views/buyProduct";
 import BuyProductCreate from "./views/buyProductCreate";
+import CheckStock from "./views/checkStock";
 
 const routes = (currentUser) => [
     {
@@ -38,6 +39,7 @@ const routes = (currentUser) => [
             { path: "manage-customer", element: currentUser ? <ManageCustomer /> : <Navigate to="404" /> },
             { path: "manage-customer/new", element: currentUser ? <ManageCustomerCreate /> : <Navigate to="404" /> },
             { path: "manage-customer/info/:id", element: currentUser ? <ManageCustomerCreate /> : <Navigate to="404" /> },
+            { path: "check-stock", element: currentUser ? <CheckStock /> : <Navigate to="404" /> },
         ],
     },
     {

@@ -81,8 +81,13 @@ exports.create_item = async (req, res) => {
 }
 
 exports.get_item = async (req, res) => {
-    const { prod_id } = req.body;
-    let item = await Item.findOne({ _id: prod_id });
+    const { prod_id, barcode } = req.body;
+    let item;
+    if(barcode){
+        item = await Item.findOne({ barcode: barcode });
+    }else{
+        item = await Item.findOne({ _id: prod_id });
+    }
     if (item) {
         res.status(200).json({
             status: "ok",
