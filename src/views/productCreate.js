@@ -265,7 +265,7 @@ export default function CreateProduct() {
             <CardContent>
               <BarcodeScannerComponent
                 width={'100%'}
-                height={350}
+                height={450}
                 onUpdate={(err, result) => {
                   if (result){
                     setData(result.text);

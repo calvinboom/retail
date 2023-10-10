@@ -38,6 +38,12 @@ const CheckStock = () => {
         }
     };
 
+    const closeModal = async () => {
+        setState(null);
+        setBarcode(null);
+        setOpenBarcode(false);
+    };
+
     return (
         <>
             <Helmet>
@@ -59,7 +65,8 @@ const CheckStock = () => {
                                 <CardContent>
                                     <BarcodeScannerComponent
                                         width={'100%'}
-                                        height={350}
+                                        height={450}
+                                        torch
                                         onUpdate={(err, result) => {
                                             if (result) {
                                                 setBarcode(result.text);
@@ -68,7 +75,7 @@ const CheckStock = () => {
                                     />
                                     <Grid container justifyContent={"flex-start"} sx={{ mt: 2 }}>
                                         <Grid item>
-                                            <Button variant="outlined" onClick={() => setOpenBarcode(false)} sx={{ textTransform: "capitalize" }}>
+                                            <Button variant="outlined" onClick={closeModal} sx={{ textTransform: "capitalize" }}>
                                                 ปิด
                                             </Button>
                                         </Grid>
@@ -102,7 +109,7 @@ const CheckStock = () => {
                                     </Grid>
                                     <Grid container justifyContent={"flex-start"} sx={{ mt: 2 }}>
                                         <Grid item>
-                                            <Button variant="outlined" onClick={() => setOpenBarcode(false)} sx={{ textTransform: "capitalize" }}>
+                                            <Button variant="outlined" onClick={closeModal} sx={{ textTransform: "capitalize" }}>
                                                 ปิด
                                             </Button>
                                         </Grid>
