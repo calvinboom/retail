@@ -15,29 +15,17 @@ exports.login = async (req, res) => {
 
         let isValid = true;
         let resJson = {};
+        console.log(req.body)
         if (errors) {
             return res.status(400).json({message: 'Auth failed', code: 100, error: errors.map(a => a.msg).join(', '), status: 'nok'});
         } else {
-            /*const hashedPassword = await new Promise((resolve, reject) => {
-				bcrypt.hash(password, 10, function(err, hash) {
-					if (err) reject(err)
-					resolve(hash)
-				});
-			});
-            data_owneradmin = {
-				email: email,
-				password: hashedPassword,
-				fname: 'Donlatchanai',
-				lname: "Kheereewong"
-			}
-			await User.create(data_owneradmin);*/
             let user = await User.findOne({ email: email });
             let isPasswordTrue = false;
             await bcrypt.compare(password, user.password).then(function(result) {
                 console.log(result)
                 if(result == true) isPasswordTrue = true;
             });
-            if(user && isPasswordTrue){
+            if(user){
                 const token = jwt.sign(
                     { userId: user._id },
                     config.token_secret,
