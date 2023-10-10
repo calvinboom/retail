@@ -281,7 +281,7 @@ export default function BuyProductCreate() {
                       fullWidth
                       style={{ height: '50px' }}
                       value={moment(expiryDate)}
-                      onChange={(newValue) => setExpiryDate(moment(newValue).format().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }))}
+                      onChange={(newValue) => setExpiryDate(moment(newValue).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).format())}
                     />
                   </LocalizationProvider>
                 </Grid>

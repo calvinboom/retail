@@ -4,13 +4,20 @@ var fs = require('fs');
 const moment = require('moment');
 
 exports.get_items = async (req, res) => {
-    const { field, keyword } = req.body;
+    const { field, keyword, length } = req.body;
     let filter = {};
+    let item;
     if(field != "all") filter.type = field;
     if (keyword) {
         filter.name = new RegExp(utils.escapeRegExp(keyword), "i");
     }
-    let item = await Item.find(filter);
+    if(field == "qty"){
+        item = await Item.find().sort({ qty: "asc" }).limit(length);
+    }else if(field == "expiry_date"){
+        item = await Item.find().sort({ expiry_date: "asc" }).limit(length);
+    }else{
+        item = await Item.find(filter);
+    }
     if (item) {
         res.status(200).json({
             status: "ok",

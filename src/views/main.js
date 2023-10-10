@@ -7,6 +7,8 @@ import TotalAnalytics from "../components/dashboard/TotalAnalytics";
 import RecentTransactions from "../components/dashboard/RecentTransactions";
 import BestSeller from "../components/dashboard/BestSeller";
 import BestProfit from "../components/dashboard/BestProfit";
+import OutOfStock from "../components/dashboard/OutOfStock";
+import ExpiryItems from "../components/dashboard/ExpiryItems";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,6 +36,12 @@ const Dashboard = () => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <BestProfit />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <OutOfStock />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <ExpiryItems />
                     </Grid>
                 </Grid>
             </Box>
