@@ -35,6 +35,17 @@ app.use(session({
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
+app.use((error, req, res, next) => {
+	if (!error) {
+		res.header("Access-Control-Allow-Origin", "*");
+		res.header(
+			"Access-Control-Allow-Headers", "*");
+		next();
+	} else {
+		console.error(error);
+    	res.send(500);
+	}
+});
 app.use(bodyParser.json());
 //app.use(fileUpload());
 app.use(expressValidator());
