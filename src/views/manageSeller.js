@@ -3,13 +3,16 @@ import { Card, Box, Grid, Button, Link } from '@material-ui/core';
 import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { DataGrid } from '@mui/x-data-grid';
-import dayjs from "dayjs";
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { useNavigate } from "react-router-dom";
+
+import { useMediaQuery } from 'react-responsive';
 
 export default function ManageSeller() {
   const [items, setItems] = useState(null);
   const navigate = useNavigate();
+
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   useEffect(() => {
     if (items === null) {
@@ -68,6 +71,52 @@ export default function ManageSeller() {
     },
   ];
 
+  const columns_mobile = [
+    {
+      field: 'seller_id',
+      headerName: 'รหัสตัวแทน',
+      minWidth: 140,
+    },
+    {
+      field: 'shop_name',
+      headerName: 'ชื่อร้าน',
+      minWidth: 200,
+    },
+    {
+      field: 'email',
+      headerName: 'อีเมล',
+      minWidth: 200,
+    },
+    {
+      field: 'fname',
+      headerName: 'ชื่อ',
+      minWidth: 140,
+    },
+    {
+      field: 'lname',
+      headerName: 'สกุล',
+      minWidth: 140,
+    },
+    {
+      field: 'phone',
+      headerName: 'เบอร์โทรศัพท์',
+      minWidth: 150,
+    },
+    {
+      field: 'line_id',
+      headerName: 'Line id',
+      minWidth: 140,
+    },
+    {
+      type: "actions",
+      minWidth: 90,
+      renderCell: (params) =>
+        <Link style={{ color: "blue", cursor: 'pointer' }} onClick={ () => navigate(`/app/manage-seller/info/${params?.row?.shortid}`) }>
+          แก้ไข
+        </Link>
+    },
+  ];
+
   return (
     <>
       <Helmet>
@@ -78,7 +127,7 @@ export default function ManageSeller() {
           <Grid item xs={12}>
             <Box component="form" noValidate autoComplete="off" mb={2}>
               <Grid container spacing={1} justifyContent="flex-start">
-                <Grid item xs={1}>
+                <Grid item xs={isMobile ? 4 : 1}>
                   <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100%" }} onClick={ () => navigate(`/app/manage-seller/new`)} >เพิ่มตัวแทน</Button>
                 </Grid>
               </Grid>
@@ -87,7 +136,7 @@ export default function ManageSeller() {
               <Box sx={{ height: "64vh", width: '100%' }}>
                 <DataGrid
                   rows={items || []}
-                  columns={columns}
+                  columns={ isMobile ? columns_mobile : columns}
                   getRowId={(row) => row._id}
                 />
               </Box>

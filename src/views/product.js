@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from "react-router-dom";
+import { useMediaQuery } from 'react-responsive';
 
 let initialFilters = {
   field: "all",
@@ -11,6 +12,7 @@ let initialFilters = {
 };
 
 export default function Product() {
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
   const [filters, setFilters] = useState(initialFilters);
   const [items, setItems] = useState(null);
 
@@ -91,6 +93,53 @@ export default function Product() {
     },
   ];
 
+  const columns_mobile = [
+    {
+      field: 'image',
+      headerName: 'รูปสินค้า',
+      minWidth: 120,
+      renderCell: (params) => params?.row?.image === null ? "No Image." : <img src={params?.row?.image} style={{maxWidth: "35px", height: "auto", objectFit: "cover" }} />,
+    },
+    {
+      field: 'name',
+      headerName: 'สินค้า',
+      minWidth: 180,
+    },
+    {
+      field: 'type',
+      headerName: 'ประเภท',
+      minWidth: 120,
+      renderCell: (params) => product_type[Number(params?.row?.type) - 1],
+    },
+    {
+      field: 'qty',
+      headerName: 'คงเหลือ',
+      minWidth: 115,
+    },
+    {
+      field: 'buy_price',
+      headerName: 'ราคาต้นทุน',
+      type: 'number',
+      minWidth: 140,
+      renderCell: (params) => params?.row?.buy_price + " ฿",
+    },
+    {
+      field: 'sell_price',
+      headerName: 'ราคาขาย',
+      type: 'number',
+      minWidth: 140,
+      renderCell: (params) => params?.row?.sell_price + " ฿",
+    },
+    {
+      type: "actions",
+      minWidth: 60,
+      renderCell: (params) =>
+        <Link style={{ color: "blue", cursor: 'pointer' }} onClick={ () => navigate(`/app/product/info/${params?.row?._id}`) }>
+          แก้ไข
+        </Link>
+    },
+  ];
+
   return (
     <>
       <Helmet>
@@ -100,10 +149,10 @@ export default function Product() {
         <Grid container spacing={2} sx={{ height: 1 }}>
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              <Grid item xs={1}>
+              <Grid item xs={isMobile ? 4 : 1}>
                 <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100%" }} onClick={ () => navigate(`/app/product/new`) }>เพิ่มสินค้า</Button>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={isMobile ? 12 : 2}>
                 <TextField
                   id="field-select"
                   size="small"
@@ -121,7 +170,7 @@ export default function Product() {
                   <MenuItem value={"2"}>อื่นๆ</MenuItem>
                 </TextField>
               </Grid>
-              <Grid item xs={9}>
+              <Grid item xs={isMobile ? 12 : 9}>
                 <TextField
                   id="keyword-text"
                   size="small"
@@ -137,7 +186,7 @@ export default function Product() {
                   <Box sx={{ height: "64vh", width: '100%' }}>
                     <DataGrid
                       rows={items || []}
-                      columns={columns}
+                      columns={ isMobile ? columns_mobile : columns}
                       getRowId={(row) => row._id}
                     />
                   </Box>

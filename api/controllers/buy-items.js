@@ -31,6 +31,7 @@ exports.create_item = async (req, res) => {
             qty: item.qty,
             buy_price: item.buy_price,
             pid: buyingOrder.pid,
+            expiry_date: item.expiry_date
         })
     }
 
@@ -41,6 +42,7 @@ exports.create_item = async (req, res) => {
             let item = data_items[index];
             let addItem = await Item.findOne({ shortid: item.shortid });
             addItem.qty = Number(addItem?.qty || 0) + Number(item.qty);
+            addItem.expiry_date = item.expiry_date;
             await addItem.save();
         }
     }
@@ -113,6 +115,7 @@ exports.update_status_buying_order = async (req, res) => {
             let item = buyingItems[index];
             let addItem = await Item.findOne({ shortid: item.item_shortid });
             addItem.qty = Number(addItem.qty) + Number(item.qty);
+            addItem.expiry_date = item.expiry_date;
             await addItem.save();
         }
     }

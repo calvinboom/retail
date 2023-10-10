@@ -6,6 +6,10 @@ import { DataGrid } from '@mui/x-data-grid';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment';
 import { useNavigate } from "react-router-dom";
+import { useMediaQuery } from 'react-responsive';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
 const style = {
   position: "absolute",
@@ -20,9 +24,11 @@ export default function BuyProductCreate() {
   const [selected, setSelected] = useState(null);
   const [itemsSelected, setItemsSelected] = useState([]);
   const [itemQty, setItemQty] = useState(1);
+  const [expiryDate, setExpiryDate] = useState(moment().format());
   const [totalPrice, setTotalPrice] = useState(0);
   const [openEditItems, setOpenEditItems] = useState(false);
   const [userData, setUserData] = useState(null);
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   const navigate = useNavigate();
 
@@ -30,7 +36,7 @@ export default function BuyProductCreate() {
     if (items === null) {
       fetchItems({ field: "all", keyword: "" });
     }
-    if (userData == null) {
+    if (userData === null) {
       fetchUser({ id: user.id });
     }
   }, []); // eslint-disable-line
@@ -75,6 +81,35 @@ export default function BuyProductCreate() {
     },
   ];
 
+  const columns_mobile = [
+    {
+      field: 'shortid',
+      headerName: 'Shortid',
+      minWidth: 140,
+    },
+    {
+      field: 'name',
+      headerName: 'สินค้า',
+      minWidth: 180,
+    },
+    {
+      field: 'buy_price',
+      headerName: 'ราคาซื้อ',
+      minWidth: 150,
+      renderCell: (params) => (Number(params?.row?.buy_price)).toLocaleString(undefined, { minimumFractionDigits: 2 }) + " ฿",
+    },
+    {
+      field: 'qty',
+      headerName: 'จำนวน',
+      minWidth: 130,
+    },
+    {
+      headerName: 'ยอดรวม',
+      minWidth: 150,
+      renderCell: (params) => (Number(params?.row?.buy_price) * Number(params?.row?.qty)).toLocaleString(undefined, { minimumFractionDigits: 2 }) + " ฿",
+    },
+  ];
+
   const handleChange = (e) => {
     setSelected({ ...selected, field: e.target.value });
     setOpenEditItems(true);
@@ -92,7 +127,8 @@ export default function BuyProductCreate() {
       name: item?.name,
       type: item?.type,
       buy_price: item?.buy_price,
-      qty: itemQty
+      qty: itemQty,
+      expiry_date: expiryDate
     };
     setItemsSelected([...itemsSelected, create_item]);
     setTotalPrice(totalPrice + (Number(item?.buy_price) * Number(itemQty)));
@@ -167,7 +203,7 @@ export default function BuyProductCreate() {
                   </Grid>
                 </Grid>
                 <Grid container justifyContent="space-between" sx={{ mt: 2, display: 'flex', alignItems: 'center' }}>
-                  <Typography>ราคารวม: {(totalPrice)?.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</Typography>
+                  <Typography sx={{ mb: isMobile && 1 }}>ราคารวม: {(totalPrice)?.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</Typography>
                   <Box>
                     <Button style={{ backgroundColor: "blue", color: "white", fontSize: "14px", width: "100px" }} onClick={() => createBuyItem()}>ขออนุมัติ</Button>
                     {userData?.role === 'admin' && <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100px", marginLeft: '5px' }} onClick={() => createBuyItemNow()}>อนุมัติทันที</Button>}
@@ -178,7 +214,7 @@ export default function BuyProductCreate() {
                 <Box sx={{ height: "60vh", width: '100%' }}>
                   <DataGrid
                     rows={itemsSelected || []}
-                    columns={columns}
+                    columns={isMobile ? columns_mobile : columns}
                     getRowId={(row) => row.shortid}
                   />
                 </Box>
@@ -235,6 +271,19 @@ export default function BuyProductCreate() {
                     InputLabelProps={{ shrink: true }}
                     autoComplete='off'
                   />
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: '15px' }}>
+                  <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <MobileDatePicker
+                      label="วันหมดอายุ"
+                      slotProps={{ textField: { size: 'small' } }}
+                      name="expiry_date"
+                      fullWidth
+                      style={{ height: '50px' }}
+                      value={moment(expiryDate)}
+                      onChange={(newValue) => setExpiryDate(moment(newValue).format().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }))}
+                    />
+                  </LocalizationProvider>
                 </Grid>
                 <Grid item>
                   <Button variant="outlined" onClick={() => setOpenEditItems(false)} sx={{ textTransform: "capitalize" }}>

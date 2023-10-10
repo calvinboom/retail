@@ -6,6 +6,7 @@ import ApiHelper from '../ApiHelper';
 import ProductCard from '../components/product-card';
 import PaymentCard from '../components/PaymentCard';
 import { DataGrid } from '@mui/x-data-grid';
+import { useMediaQuery } from 'react-responsive';
 
 let initialFilters = {
   field: "all",
@@ -24,6 +25,7 @@ export default function SellingPage() {
   }else{
     cart_session = [];
   }
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
   const [cart, setCart] = useState(cart_session);
   const [totalPrice, setTotalPrice] = useState(total);
 
@@ -122,13 +124,15 @@ export default function SellingPage() {
       field: 'name',
       headerName: 'สินค้า',
       flex: 1,
+      sortable: false
     },
     {
       field: 'qty',
       headerName: 'จำนวน',
       type: 'number',
-      maxWidth: 50,
+      maxWidth: 60,
       editable: true,
+      sortable: false,
       onchange: (params) => updateCart(params?.row)
     },
     {
@@ -136,11 +140,13 @@ export default function SellingPage() {
       headerName: 'ราคา',
       type: 'number',
       maxWidth: 60,
+      sortable: false,
       renderCell: (params) => params?.row?.price + " ฿",
     },
     {
       type: "actions",
       maxWidth: 30,
+      sortable: false,
       renderCell: (params) =>
         <Link style={{ color: "red", cursor: 'pointer' }} onClick={() => deleteItemCart(params?.row)}>
           ลบ
@@ -156,12 +162,12 @@ export default function SellingPage() {
       </Helmet>
       <Box style={{ padding: "32px 32px 0px 32px" }}>
         <Grid container spacing={2} sx={{ height: 1 }}>
-          <Grid item xs={9}>
+          <Grid item xs={isMobile ? 12 : 9}>
             <Card sx={{ height: '82vh' }}>
               <Grid container spacing={2} sx={{padding: "24px"}}>
                 <Grid item xs={12}>
                   <Grid container spacing={2}>
-                    <Grid item xs={2}>
+                    <Grid item xs={isMobile ? 5 : 2}>
                       <TextField
                         id="field-select"
                         size="small"
@@ -179,7 +185,7 @@ export default function SellingPage() {
                         <MenuItem value={"2"}>อื่นๆ</MenuItem>
                       </TextField>
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid item xs={isMobile ? 7 : 10}>
                       <TextField
                         id="keyword-text"
                         size="small"
@@ -205,7 +211,7 @@ export default function SellingPage() {
               </Grid>
             </Card>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={isMobile ? 12 : 3}>
             <Card sx={{ height: '82vh' }}>
               <CardContent style={{ height: '100%', textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <Typography style={{ marginBottom: "10px", fontSize: "19px" }}>ตะกร้าสินค้า</Typography>
@@ -215,6 +221,8 @@ export default function SellingPage() {
                     columns={columns}
                     getRowId={(row) => row.prod_id}
                     hideFooter={true}
+                    disableColumnFilter={true}
+                    disableColumnMenu={true}
                   />
                 </Box>
                 <Typography style={{ fontSize: "19px" }}>ราคารวม { totalPrice } บาท</Typography>

@@ -4,11 +4,14 @@ import CardContent from '@material-ui/core/CardContent';
 import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { useNavigate, useParams } from "react-router-dom";
+import { useMediaQuery } from 'react-responsive';
 
 export default function ManageCustomerCreate() {
   const [state, setState] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   useEffect(() => {
     if (id) {
@@ -72,7 +75,7 @@ export default function ManageCustomerCreate() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="ชื่อ *"
@@ -86,7 +89,7 @@ export default function ManageCustomerCreate() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="สกุล *"
@@ -100,7 +103,7 @@ export default function ManageCustomerCreate() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="เบอร์โทรศัพท์ *"
@@ -114,7 +117,7 @@ export default function ManageCustomerCreate() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     select
                     id="type-select"
@@ -148,7 +151,7 @@ export default function ManageCustomerCreate() {
                     </MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="ที่อยู่ *"

@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Box, Grid, TextField, Typography, Button, MenuItem } from '@material-ui/core';
+import { Card, Box, Grid, TextField, Typography, Button } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { useNavigate, useParams } from "react-router-dom";
+import { useMediaQuery } from 'react-responsive';
 
 export default function ManageSeller() {
   const [state, setState] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   useEffect(() => {
     if (id) {
@@ -72,7 +75,7 @@ export default function ManageSeller() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="อีเมล *"
@@ -87,7 +90,7 @@ export default function ManageSeller() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="Line id *"
@@ -101,7 +104,7 @@ export default function ManageSeller() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="ชื่อ *"
@@ -115,7 +118,7 @@ export default function ManageSeller() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="สกุล *"
@@ -129,7 +132,7 @@ export default function ManageSeller() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="เบอร์โทรศัพท์ *"
@@ -143,7 +146,7 @@ export default function ManageSeller() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="type-select"
                     label="ชื่อร้าน *"

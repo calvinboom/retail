@@ -13,6 +13,7 @@ const itemsSchema = mongoose.Schema({
     qty: { type: Number, default: 0 },
     image: { type: String, default: null },
     barcode: { type: String, default: null },
+    expiry_date: { type: Date, default: null },
     created_date: { type: Date, default: Date.now },
     updated_date: { type: Date, default: Date.now }
 });

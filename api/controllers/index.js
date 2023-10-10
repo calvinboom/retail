@@ -105,6 +105,7 @@ exports.get_user = async (req, res) => {
             fname: user.fname,
             lname: user.lname,
             role: user.role,
+            phone: user.phone
         };
         if(user_data){
             res.status(200).json({

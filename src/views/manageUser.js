@@ -6,10 +6,13 @@ import { DataGrid } from '@mui/x-data-grid';
 import dayjs from "dayjs";
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { useNavigate } from "react-router-dom";
+import { useMediaQuery } from 'react-responsive';
 
 export default function ManageCustomer() {
   const [items, setItems] = useState(null);
   const navigate = useNavigate();
+
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   useEffect(() => {
     if (items === null) {
@@ -65,6 +68,49 @@ export default function ManageCustomer() {
     },
   ];
 
+  const columns_mobile = [
+    {
+      field: 'email',
+      headerName: 'อีเมล',
+      minWidth: 200,
+    },
+    {
+      field: 'fname',
+      headerName: 'ชื่อ',
+      minWidth: 150,
+    },
+    {
+      field: 'lname',
+      headerName: 'สกุล',
+      minWidth: 150,
+    },
+    {
+      field: 'phone',
+      headerName: 'เบอร์โทรศัพท์',
+      minWidth: 150,
+    },
+    {
+      field: 'role',
+      headerName: 'ตำแหน่ง',
+      minWidth: 140,
+      renderCell: (params) => params?.row?.role === "user" ? "พนักงาน" : "เจ้าของร้าน",
+    },
+    {
+      field: 'created_date',
+      headerName: 'วันที่สร้าง',
+      minWidth: 160,
+      renderCell: (params) => params?.row?.created_date && dayjs(params?.row?.created_date).format("MMM D, YYYY HH:mm"),
+    },
+    {
+      type: "actions",
+      minWidth: 80,
+      renderCell: (params) =>
+        <Link style={{ color: "blue", cursor: 'pointer' }} onClick={ () => navigate(`/app/manage-user/info/${params?.row?.shortid}`) }>
+          แก้ไข
+        </Link>
+    },
+  ];
+
   return (
     <>
       <Helmet>
@@ -75,7 +121,7 @@ export default function ManageCustomer() {
           <Grid item xs={12}>
             <Box component="form" noValidate autoComplete="off" mb={2}>
               <Grid container spacing={1} justifyContent="flex-start">
-                <Grid item xs={1}>
+                <Grid item xs={isMobile ? 3 : 1}>
                   <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "100%" }} onClick={ () => navigate(`/app/manage-user/new`)} >เพิ่มผู้ใช้</Button>
                 </Grid>
               </Grid>
@@ -84,7 +130,7 @@ export default function ManageCustomer() {
               <Box sx={{ height: "64vh", width: '100%' }}>
                 <DataGrid
                   rows={items || []}
-                  columns={columns}
+                  columns={ isMobile ? columns_mobile : columns}
                   getRowId={(row) => row._id}
                 />
               </Box>

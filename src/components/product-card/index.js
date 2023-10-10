@@ -1,5 +1,5 @@
-import { Card, ImageListItem, ImageListItemBar, Badge } from "@mui/material";
-import React, { useState } from 'react';
+import { Card, ImageListItem, ImageListItemBar } from "@mui/material";
+import React from 'react';
 import { withSwal } from "react-sweetalert2";
 
 const ProductCard = (props) => {
@@ -18,7 +18,7 @@ const ProductCard = (props) => {
                     let filter_item = cart?.filter((element) => element.prod_id === prod_id);
                     return (
                         <ImageListItem key={img} sx={{ maxHeight: 270 }}
-                            onClick={() => (Number(qty) - Number(filter_item[0]?.qty) <= 0) || qty == 0
+                            onClick={() => (Number(qty) - Number(filter_item[0]?.qty) <= 0) || qty === 0
                                 ? 
                                     swal.fire({
                                         title: 'เกิดข้อผิดพลาด',

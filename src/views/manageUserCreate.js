@@ -4,11 +4,14 @@ import CardContent from '@material-ui/core/CardContent';
 import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { useNavigate, useParams } from "react-router-dom";
+import { useMediaQuery } from 'react-responsive';
 
 export default function ManageUserCreate() {
   const [state, setState] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   useEffect(() => {
     if (id) {
@@ -58,7 +61,7 @@ export default function ManageUserCreate() {
                 <Grid item xs={12} sx={{ paddingTop: "0 !important" }}>
                   <Typography variant="h5">รายละเอียดผู้ใช้งาน</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <TextField
                     id="merchant-name-field"
                     label="อีเมล *"
@@ -73,7 +76,7 @@ export default function ManageUserCreate() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <TextField
                     id="merchant-name-field"
                     label="พาสเวิร์ด *"
@@ -88,7 +91,7 @@ export default function ManageUserCreate() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <TextField
                     id="merchant-name-field"
                     label="ชื่อ *"
@@ -102,7 +105,7 @@ export default function ManageUserCreate() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <TextField
                     id="merchant-name-field"
                     label="สกุล *"
@@ -116,7 +119,7 @@ export default function ManageUserCreate() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <TextField
                     id="merchant-name-field"
                     label="เบอร์โทรศัพท์ *"
@@ -130,7 +133,7 @@ export default function ManageUserCreate() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <TextField
                     select
                     id="type-select"

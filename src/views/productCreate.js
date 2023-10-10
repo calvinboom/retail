@@ -5,6 +5,11 @@ import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { useNavigate, useParams } from "react-router-dom";
 import BarcodeScannerComponent from "react-qr-barcode-scanner-updated";
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { useMediaQuery } from 'react-responsive';
+import moment from 'moment';
 
 const style = {
   position: "absolute",
@@ -21,6 +26,8 @@ export default function CreateProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
+
   const [openBarcode, setOpenBarcode] = useState(false);
   const [data, setData] = useState("Not Found");
 
@@ -33,6 +40,7 @@ export default function CreateProduct() {
   const fetchProduct = async (payload = {}) => {
     const res = await ApiHelper.getItem(payload);
     if(res?.status === "ok"){
+      console.log('res', res)
       setState(res?.data)
     }
   };
@@ -47,7 +55,7 @@ export default function CreateProduct() {
     formData.append('qty', payload.data.qty);
     formData.append('buy_price', payload.data.buy_price);
     formData.append('sell_price', payload.data.sell_price);
-    console.log("formData", formData.values())
+    formData.append('expiry_date', payload.data.expiry_date);
 
     if(id){
       formData.append('prod_id', id)
@@ -73,7 +81,11 @@ export default function CreateProduct() {
   ]
 
   const handleChange = (e) => {
-    setState({ ...state, [e.target.name]: e.target.value });
+    if(e?.type === 'expiry_date'){
+      setState({ ...state, expiry_date: e?.date });
+    }else{
+      setState({ ...state, [e.target.name]: e.target.value });
+    }
   };
 
   const handleUploadImage = (e) => { 
@@ -103,7 +115,7 @@ export default function CreateProduct() {
                 <Grid item xs={12} sx={{ paddingTop: "0 !important" }}>
                   <Typography variant="h5">รายละเอียดสินค้า</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="ชื่อสินค้า *"
@@ -117,7 +129,7 @@ export default function CreateProduct() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     select
                     id="type-select"
@@ -148,7 +160,7 @@ export default function CreateProduct() {
                     </MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="ราคาต้นทุน *"
@@ -162,7 +174,7 @@ export default function CreateProduct() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="ราคาขาย *"
@@ -176,7 +188,7 @@ export default function CreateProduct() {
                     autoComplete='off'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={ isMobile ? 12 : 6 }>
                   <TextField
                     id="merchant-name-field"
                     label="จำนวน *"
@@ -203,6 +215,19 @@ export default function CreateProduct() {
                     autoComplete='off'
                     InputProps={{ endAdornment: <Button style={{ backgroundColor: "white", color: "black", fontSize: "14px", width: "70px" }} onClick={() => setOpenBarcode(true)}>แสกน</Button> }}
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <MobileDatePicker
+                      label="วันหมดอายุ"
+                      slotProps={{ textField: { size: 'small' } }}
+                      name="expiry_date"
+                      fullWidth
+                      style={{ height: '50px' }}
+                      value={moment(state?.expiry_date)}
+                      onChange={(newValue) => handleChange({ type: "expiry_date", date: moment(newValue).format().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }) })}
+                    />
+                  </LocalizationProvider>
                 </Grid>
                 <Grid item xs={12}>
                 <Button

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Box, Grid, Button, Typography, FormControlLabel, Switch, TextField, Link, Modal, CardHeader, Divider, CardContent } from '@material-ui/core';
+import { Card, Box, Grid, Button, Chip, Link, Modal, CardHeader, Divider, CardContent } from '@material-ui/core';
 import { Helmet } from 'react-helmet';
 import ApiHelper from '../ApiHelper';
 import { DataGrid } from '@mui/x-data-grid';
@@ -10,6 +10,7 @@ import moment from 'moment';
 import { Calendar } from 'react-feather';
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from 'react-responsive';
+import { Loader as LoaderIcon, CheckCircle as CheckCircleIcon, XCircle as XCircleIcon, Truck as TruckIcon} from "react-feather";
 
 const style = {
   position: "absolute",
@@ -84,7 +85,7 @@ export default function BuyProduct() {
       field: 'status',
       headerName: 'สถานะ',
       flex: 1,
-      renderCell: (params) => params?.row?.status === 'waiting' ? "รออนุมัติ" : params?.row?.status === 'success' ? "นำเข้าสำเร็จ" : params?.row?.status === 'cancel' ? 'ยกเลิก' : 'รอสินค้า',
+      renderCell: (params) => params?.row?.status === 'waiting' ? <Chip color="warning" icon={<LoaderIcon />} label="รออนุมัติ" /> : params?.row?.status === 'success' ? <Chip color="success" icon={<CheckCircleIcon />} label="นำเข้าสำเร็จ" /> : params?.row?.status === 'cancel' ? <Chip color="error" icon={<XCircleIcon />} label="ยกเลิกรายการ" /> : <Chip color="primary" icon={<TruckIcon />} label="รอรับสินค้า" />,
     },
     {
       field: 'total_price',
@@ -120,6 +121,51 @@ export default function BuyProduct() {
     },
   ];
 
+  const columns_mobile = [
+    {
+      field: 'pid',
+      headerName: 'เลขที่ใบสั่งซื้อ',
+      minWidth: 150,
+    },
+    {
+      field: 'status',
+      headerName: 'สถานะ',
+      minWidth: 150,
+      renderCell: (params) => params?.row?.status === 'waiting' ? <Chip color="warning" icon={<LoaderIcon />} label="รออนุมัติ" /> : params?.row?.status === 'success' ? <Chip color="success" icon={<CheckCircleIcon />} label="นำเข้าสำเร็จ" /> : params?.row?.status === 'cancel' ? <Chip color="error" icon={<XCircleIcon />} label="ยกเลิกรายการ" /> : <Chip color="primary" icon={<TruckIcon />} label="รอรับสินค้า" />,
+    },
+    {
+      field: 'total_price',
+      headerName: 'ยอดรวม',
+      minWidth: 150,
+      renderCell: (params) => params?.row?.total_price.toLocaleString(undefined, { minimumFractionDigits: 2 }) + " ฿",
+    },
+    {
+      field: 'created_date',
+      headerName: 'วันที่',
+      minWidth: 150,
+      renderCell: (params) => params?.row?.created_date && dayjs(params?.row?.created_date).format("MMM D, YYYY HH:mm"),
+    },
+    {
+      field: 'buy_user',
+      headerName: 'ผู้ทำรายการ',
+      minWidth: 180,
+      renderCell: (params) => params?.row?.buy_user ? `${params?.row?.buy_user?.fname} (${params?.row?.buy_user?.role === "admin" ? "เจ้าของร้าน" : "พนักงาน"})` : "",
+    },
+    {
+      type: "actions",
+      minWidth: 100,
+      renderCell: (params) => (params?.row?.status !== 'success' && params?.row?.status !== 'cancel')
+      ?
+        <Link style={{ color: "blue", cursor: 'pointer' }} onClick={() => handleOpenItem(`${params?.row?.pid}`, params?.row?.status)}>
+          อัพเดท
+        </Link>
+      :
+        <Link style={{ color: "blue", cursor: 'pointer' }} onClick={() => handleOpenItem(`${params?.row?.pid}`, params?.row?.status)}>
+          ดูรายละเอียด
+        </Link>
+    },
+  ];
+
   const buy_columns = [
     {
       field: 'name',
@@ -130,7 +176,7 @@ export default function BuyProduct() {
     {
       field: 'qty',
       headerName: 'จำนวน',
-      minWidth: 40,
+      minWidth: 140,
       flex: 1
     },
     {
@@ -170,6 +216,11 @@ export default function BuyProduct() {
           <Grid item xs={12}>
             <Box component="form" noValidate autoComplete="off" mb={2}>
               <Grid container spacing={1} justifyContent="flex-end">
+                { isMobile &&
+                  <Grid item xs={12} sx={{ display: "flex", mb: 1 }}>
+                      <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "150px" }} onClick={() => navigate(`/app/buy-product/new`)}>สร้างใบสั่งซื้อ</Button>
+                  </Grid>
+                }
                 <Grid item xs={12} sx={{ display: "flex" }}>
                   <DateRangePicker
                     initialSettings={{
@@ -234,9 +285,8 @@ export default function BuyProduct() {
                         cursor: 'pointer',
                         paddingLeft: '10px',
                         paddingRight: '10px',
-                        marginRight: '20px',
                         height: '38px',
-                        fontSize: '14px',
+                        fontSize: isMobile ? '12px' : '14px',
                         display: 'flex',
                         borderColor: "rgba(0, 0, 0, 0.15)",
                         background: 'white'
@@ -248,7 +298,9 @@ export default function BuyProduct() {
                       <Calendar style={{ color: 'black', width: '18px' }} />
                     </Button>
                   </DateRangePicker>
-                  <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "150px" }} onClick={() => navigate(`/app/buy-product/new`)}>สร้างใบสั่งซื้อ</Button>
+                  { !isMobile &&
+                    <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px", width: "150px", marginLeft: '15px' }} onClick={() => navigate(`/app/buy-product/new`)}>สร้างใบสั่งซื้อ</Button>
+                  }
                 </Grid>
               </Grid>
             </Box>
@@ -256,7 +308,7 @@ export default function BuyProduct() {
               <Box sx={{ height: "64vh", width: '100%' }}>
                 <DataGrid
                   rows={items || []}
-                  columns={columns}
+                  columns={isMobile ? columns_mobile : columns}
                   getRowId={(row) => row._id}
                 />
               </Box>

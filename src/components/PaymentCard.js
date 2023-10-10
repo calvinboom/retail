@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Typography, Modal, Card, CardHeader, CardContent, Box, Divider, Grid, Button, Autocomplete, TextField } from "@material-ui/core";
-import SweetAlert2 from "react-sweetalert2";
 import ApiHelper from '../ApiHelper';
 import html2canvas from 'html2canvas';
 import ReactToPrint from 'react-to-print';

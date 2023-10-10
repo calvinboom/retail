@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const { customAlphabet } = require('nanoid');
-const config = require('../../config.json');
 
 const buyingitemsSchema = mongoose.Schema({
 	_id: { type:mongoose.Schema.Types.ObjectId, auto: true },
@@ -11,6 +9,7 @@ const buyingitemsSchema = mongoose.Schema({
     qty: { type: Number },
     buy_price: { type: Number },
     pid: { type: String },
+    expiry_date: { type: Date },
     created_date: { type: Date, default: Date.now },
     updated_date: { type: Date, default: Date.now }
 });

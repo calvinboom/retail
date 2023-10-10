@@ -9,6 +9,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment';
 import { Calendar } from 'react-feather';
 import { styled } from '@mui/material/styles';
+import { useMediaQuery } from 'react-responsive';
 
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -65,6 +66,7 @@ export default function Transaction() {
   const [items, setItems] = useState(null);
   const [switchState, setSwitchState] = useState(false);
   const [txidData, setTxidData] = useState('');
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   const [state, setState] = useState({
     start: moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }),
@@ -177,6 +179,61 @@ export default function Transaction() {
     },
   ];
 
+  const columns_mobile = [
+    {
+      field: 'name',
+      headerName: 'สินค้า',
+      minWidth: 180
+    },
+    {
+      field: 'qty',
+      headerName: 'จำนวน',
+      minWidth: 110
+    },
+    {
+      field: 'buy_price',
+      headerName: 'ต้นทุน',
+      minWidth: 110,
+      renderCell: (params) => params?.row?.buy_price.toLocaleString(undefined, { minimumFractionDigits: 2 }) + " ฿",
+    },
+    {
+      field: 'sell_price',
+      headerName: 'ราคาขาย',
+      minWidth: 120,
+      renderCell: (params) => params?.row?.sell_price.toLocaleString(undefined, { minimumFractionDigits: 2 }) + " ฿",
+    },
+    {
+      field: 'profit',
+      headerName: 'กำไร',
+      minWidth: 120,
+      renderCell: (params) => params?.row?.profit.toLocaleString(undefined, { minimumFractionDigits: 2 }) + " ฿",
+    },
+    {
+      field: 'payment_type',
+      headerName: 'จ่ายด้วย',
+      minWidth: 110,
+      renderCell: (params) => params?.row?.payment_type === "cash" ? "เงินสด" : "QR พร้อมเพย์",
+    },
+    {
+      field: 'customer',
+      headerName: 'ซื้อโดย',
+      minWidth: 140,
+      renderCell: (params) => params?.row?.customer ? `${params?.row?.customer?.fname} (${params?.row?.customer?.rank[0].toUpperCase() + params?.row?.customer?.rank.slice(1)})` : "",
+    },
+    {
+      field: 'sell_user',
+      headerName: 'ขายโดย',
+      minWidth: 180,
+      renderCell: (params) => params?.row?.sell_user ? `${params?.row?.sell_user?.fname} (${params?.row?.sell_user?.role === "admin" ? "เจ้าของร้าน" : "พนักงาน"})` : "",
+    },
+    {
+      field: 'created_date',
+      headerName: 'ขายเมื่อ',
+      minWidth: 140,
+      renderCell: (params) => params?.row?.created_date && dayjs(params?.row?.created_date).format("MMM D, YYYY HH:mm"),
+    },
+  ];
+
   return (
     <>
       <Helmet>
@@ -252,9 +309,8 @@ export default function Transaction() {
                           cursor: 'pointer',
                           paddingLeft: '10px',
                           paddingRight: '10px',
-                          marginRight: '20px',
                           height: '38px',
-                          fontSize: '14px',
+                          fontSize: isMobile ? '12px' : '14px',
                           display: 'flex',
                           borderColor: "rgba(0, 0, 0, 0.15)",
                           background: 'white'
@@ -280,11 +336,21 @@ export default function Transaction() {
                       autoComplete='off'
                     />
                   }
-                  <FormControlLabel
-                    control={<IOSSwitch sx={{ m: 1 }} checked={switchState} onClick={() => handleChangeSwitch(!switchState)} />}
-                    label="ใช้ TXID จากใบเสร็จเพื่อค้นหา"
-                  />
+                  { !isMobile &&
+                    <FormControlLabel sx={{ ml: 2 }}
+                      control={<IOSSwitch sx={{ m: 1 }} checked={switchState} onClick={() => handleChangeSwitch(!switchState)} />}
+                      label="ใช้ TXID จากใบเสร็จเพื่อค้นหา"
+                    />
+                  }
                 </Grid>
+                { isMobile &&
+                  <Grid item xs={12}>
+                    <FormControlLabel
+                      control={<IOSSwitch sx={{ m: 1 }} checked={switchState} onClick={() => handleChangeSwitch(!switchState)} />}
+                      label="ใช้ TXID จากใบเสร็จเพื่อค้นหา"
+                    />
+                  </Grid>
+                }
                 <Grid item xs={12}>
                   <Typography>ต้นทุนรวม: {state?.total_buy?.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</Typography>
                 </Grid>
@@ -300,7 +366,7 @@ export default function Transaction() {
               <Box sx={{ height: "64vh", width: '100%' }}>
                 <DataGrid
                   rows={items || []}
-                  columns={columns}
+                  columns={isMobile ? columns_mobile : columns}
                   getRowId={(row) => row._id}
                 />
               </Box>
