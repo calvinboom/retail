@@ -341,7 +341,7 @@ export default function BuyProduct() {
                       ยกเลิกรายการ
                     </Button>
                   }
-                  { status !== 'success' &&
+                  { (status !== 'success' && status !== 'cancel') &&
                     <Button style={{ backgroundColor: "green", color: "white", fontSize: "14px" }} onClick={() => updateStatusBO({ pid: pid, status: status === 'waiting' ? 'confirm' : 'success' })} sx={{ textTransform: "capitalize", ml: 2 }}>
                       { status === 'waiting' ? 'อนุมัติ' : 'รับสินค้าแล้ว' }
                     </Button>

@@ -89,7 +89,7 @@ const CheckStock = () => {
                                 <CardContent>
                                     <Grid container spacing={2} sx={{ height: '76vh' }} alignItems="center" justifyContent="center" textAlign="center">
                                         <Grid item xs={12}>
-                                            <img src={state?.image ? state?.image : "/static/no-img.png"} style={{maxWidth: "200px", height: "auto", objectFit: "cover" }} />
+                                            <img src={state?.image ? process.env.REACT_APP_MODE === "prod" ? process.env.REACT_APP_BACKEND_URL + state?.image : state?.image : "/static/no-img.png"} style={{maxWidth: "200px", height: "auto", objectFit: "cover" }} />
                                         </Grid>
                                         <Grid item xs={12}>
                                             <Typography variant="h4">{state?.name}</Typography>

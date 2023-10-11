@@ -29,7 +29,7 @@ const ProductCard = (props) => {
                             }
                         >
                             <img
-                                src={`${img}?w=180&fit=crop&auto=format`}
+                                src={process.env.REACT_APP_MODE === "prod" ? process.env.REACT_APP_BACKEND_URL + `${img}?w=180&fit=crop&auto=format` : `${img}?w=180&fit=crop&auto=format` }
                                 srcSet={`${img}?w=180&fit=crop&auto=format&dpr=2 2x`}
                                 alt={name}
                                 loading="lazy"

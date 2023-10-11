@@ -51,7 +51,7 @@ export default function Product() {
       field: 'image',
       headerName: 'รูปสินค้า',
       flex: 1,
-      renderCell: (params) => params?.row?.image === null ? "No Image." : <img src={params?.row?.image} style={{maxWidth: "35px", height: "auto", objectFit: "cover" }} />,
+      renderCell: (params) => params?.row?.image === null ? "No Image." : <img src={process.env.REACT_APP_MODE === "prod" ? process.env.REACT_APP_BACKEND_URL + params?.row?.image : params?.row?.image } style={{maxWidth: "35px", height: "auto", objectFit: "cover" }} />,
     },
     {
       field: 'name',
@@ -98,7 +98,7 @@ export default function Product() {
       field: 'image',
       headerName: 'รูปสินค้า',
       minWidth: 120,
-      renderCell: (params) => params?.row?.image === null ? "No Image." : <img src={params?.row?.image} style={{maxWidth: "35px", height: "auto", objectFit: "cover" }} />,
+      renderCell: (params) => params?.row?.image === null ? "No Image." : <img src={ process.env.REACT_APP_MODE === "prod" ? process.env.REACT_APP_BACKEND_URL + params?.row?.image : params?.row?.image } style={{maxWidth: "35px", height: "auto", objectFit: "cover" }} />,
     },
     {
       field: 'name',
