@@ -63,7 +63,7 @@ const RecentTransactions = () => {
     return (
         <>
             <Card style={{ borderRadius: "10px" }}>
-                <CardHeader title="ขายล่าสุด (เดือนนี้)" sx={{ "& .MuiCardHeader-action": { alignSelf: "center" } }} />
+                <CardHeader title="ขายล่าสุด" sx={{ "& .MuiCardHeader-action": { alignSelf: "center" } }} />
                 <Divider />
                 <CardContent sx={{ padding: "0 !important" }}>
                     {payments && Array.isArray(payments) ? (

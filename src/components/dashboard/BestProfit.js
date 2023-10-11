@@ -64,7 +64,7 @@ const RecentTransactions = () => {
     return (
         <>
             <Card style={{ borderRadius: "10px" }}>
-                <CardHeader title="กำไรเยอะที่สุด (เดือนนี้)" sx={{ "& .MuiCardHeader-action": { alignSelf: "center" } }} />
+                <CardHeader title="กำไรเยอะที่สุด" sx={{ "& .MuiCardHeader-action": { alignSelf: "center" } }} />
                 <Divider />
                 <CardContent sx={{ padding: "0 !important" }}>
                     {payments && Array.isArray(payments) ? (
