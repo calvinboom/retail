@@ -1,6 +1,12 @@
 import axios from "axios";
 
-const BASE_API_URL = process.env.REACT_APP_BACKEND_URL;
+// Fallback to localhost if env var not loaded
+const BASE_API_URL = process.env.REACT_APP_BACKEND_URL || 'http://127.0.0.1:4040';
+
+// Debug: log the backend URL
+if (!process.env.REACT_APP_BACKEND_URL) {
+    console.warn('REACT_APP_BACKEND_URL not set, using fallback:', BASE_API_URL);
+}
 
 // Create axios instance with default config
 const apiClient = axios.create({
