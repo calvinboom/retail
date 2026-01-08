@@ -28,7 +28,9 @@ exports.create_transaction = async (req, res) => {
 
             if(customer_shortid != null || customer_shortid != undefined){
                 let buy_price = Number(item.buy_price) * Number(data[index].qty);
-                let calculate_price = data[index].price - (data[index].price * Number("0.0"+String(customer.sp_detail)));
+                // Fixed: Use proper percentage calculation (sp_detail / 100)
+                let discount_rate = Number(customer.sp_detail) / 100;
+                let calculate_price = data[index].price - (data[index].price * discount_rate);
                 let profit = Number(calculate_price) - Number(buy_price);
                 total_price = total_price + calculate_price;
 

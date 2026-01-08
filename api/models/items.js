@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-const { customAlphabet } = require('nanoid');
-const config = require('../../config.json');
-const nanoid = customAlphabet(config.SHORTID_CHARACTERS_NON_SPECIAL, 10);
+const { nanoid } = require('../lib/nanoid');
 
 const itemsSchema = mongoose.Schema({
 	_id: { type:mongoose.Schema.Types.ObjectId, auto: true },

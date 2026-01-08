@@ -1,8 +1,18 @@
 const User = require('../models/users');
 const { get } = require('lodash')
 const jwt = require('jsonwebtoken');
-const config = require('../../config.json');
 const bcrypt = require('bcrypt');
+
+// Load config with fallback
+let config = {};
+try {
+    config = require('../../config.json');
+} catch (e) {
+    // config.json not found, using env vars
+}
+
+// Use environment variable with fallback to config
+const JWT_SECRET = process.env.JWT_SECRET || config.token_secret;
 
 exports.login = async (req, res) => {
     try{
@@ -13,52 +23,57 @@ exports.login = async (req, res) => {
         const password = get(req.body, 'password', null);
         var errors = req.validationErrors();
 
-        let isValid = true;
-        let resJson = {};
-        console.log(req.body)
         if (errors) {
             return res.status(400).json({message: 'Auth failed', code: 100, error: errors.map(a => a.msg).join(', '), status: 'nok'});
-        } else {
-            let user = await User.findOne({ email: email });
-            let isPasswordTrue = false;
-            await bcrypt.compare(password, user.password).then(function(result) {
-                console.log(result)
-                if(result == true) isPasswordTrue = true;
+        }
+
+        // Find user first before comparing password
+        let user = await User.findOne({ email: email });
+
+        // Check if user exists
+        if (!user) {
+            return res.status(401).json({
+                status: 'nok',
+                message: 'Invalid email or password.'
             });
-            if(user){
-                const token = jwt.sign(
-                    { userId: user._id },
-                    config.token_secret,
-                    { expiresIn: '24h' });
-                resJson = {
-                    status: 'ok',
-                    message: 'Login success.',
-                    accessToken: token,
-                    user: {
-                        id: user.shortid,
-                        fname: user.fname,
-                        lname: user.lname,
-                        username: user.email,
-                        email: user.email,
-                        avatar: user.avatar
-                    }
-                };
-            }else{
-                console.log('false------- : ', user)
-                isValid = false;
-                resJson = {
-                    status: 'nok',
-                    message: 'Password not match.'
-                };
+        }
+
+        // Compare password only if user exists
+        const isPasswordTrue = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordTrue) {
+            return res.status(401).json({
+                status: 'nok',
+                message: 'Invalid email or password.'
+            });
+        }
+
+        // Generate token for valid user
+        const token = jwt.sign(
+            { userId: user._id },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.status(200).json({
+            status: 'ok',
+            message: 'Login success.',
+            accessToken: token,
+            user: {
+                id: user.shortid,
+                fname: user.fname,
+                lname: user.lname,
+                username: user.email,
+                email: user.email,
+                avatar: user.avatar
             }
-        }
-        if(isValid){
-            res.status(200).json(resJson)
-        }else{
-            res.status(201).json(resJson)
-        }
+        });
     }catch(err){
-        console.log(err)
+        console.log(err);
+        res.status(500).json({
+            status: 'nok',
+            message: 'Internal server error.'
+        });
     }
 }
 
@@ -80,7 +95,12 @@ exports.get_users = async (req, res) => {
             });
         }
     }catch(err){
-        console.log(err)
+        console.log(err);
+        res.status(500).json({
+            status: "nok",
+            message: "Internal server error",
+            data: null,
+        });
     }
 }
 
@@ -88,6 +108,15 @@ exports.get_user = async (req, res) => {
     try{
         const { id } = req.body;
         let user = await User.findOne({ shortid: id });
+
+        if(!user){
+            return res.status(404).json({
+                status: "nok",
+                message: "User not found",
+                data: null,
+            });
+        }
+
         let user_data = {
             email: user.email,
             fname: user.fname,
@@ -95,27 +124,34 @@ exports.get_user = async (req, res) => {
             role: user.role,
             phone: user.phone
         };
-        if(user_data){
-            res.status(200).json({
-                status: "ok",
-                message: "Get user data",
-                data: user_data,
-            });
-        } else {
-            res.status(500).json({
-                status: "nok",
-                message: "Can't get a user data",
-                data: null,
-            });
-        }
+
+        res.status(200).json({
+            status: "ok",
+            message: "Get user data",
+            data: user_data,
+        });
     }catch(err){
-        console.log(err)
+        console.log(err);
+        res.status(500).json({
+            status: "nok",
+            message: "Internal server error",
+            data: null,
+        });
     }
 }
 
 exports.create_user = async (req, res) => {
     try{
         let { data } = req.body;
+
+        if(!data || !data.password || !data.email){
+            return res.status(400).json({
+                status: "nok",
+                message: "Email and password are required",
+                data: null,
+            });
+        }
+
         const hashedPassword = await new Promise((resolve, reject) => {
             bcrypt.hash(data.password, 10, function(err, hash) {
                 if (err) reject(err)
@@ -138,14 +174,37 @@ exports.create_user = async (req, res) => {
             });
         }
     }catch(err){
-        console.log(err)
+        console.log(err);
+        res.status(500).json({
+            status: "nok",
+            message: "Internal server error",
+            data: null,
+        });
     }
 }
 
 exports.update_user = async (req, res) => {
     try{
         let { data, id } = req.body;
+
+        if(!id){
+            return res.status(400).json({
+                status: "nok",
+                message: "User ID is required",
+                data: null,
+            });
+        }
+
         let user = await User.findOne({ shortid: id });
+
+        if(!user){
+            return res.status(404).json({
+                status: "nok",
+                message: "User not found",
+                data: null,
+            });
+        }
+
         if(data.password && data.password != ""){
             const hashedPassword = await new Promise((resolve, reject) => {
                 bcrypt.hash(data.password, 10, function(err, hash) {
@@ -153,7 +212,7 @@ exports.update_user = async (req, res) => {
                     resolve(hash)
                 });
             });
-            data.password = hashedPassword;
+            user.password = hashedPassword;
         }
         if(data.email) user.email = data.email;
         if(data.fname) user.fname = data.fname;
@@ -163,20 +222,17 @@ exports.update_user = async (req, res) => {
 
         await user.save();
 
-        if(user){
-            res.status(200).json({
-                status: "ok",
-                message: "Create an user successfully",
-                data: user,
-            });
-        } else {
-            res.status(500).json({
-                status: "nok",
-                message: "Can't create an user",
-                data: null,
-            });
-        }
+        res.status(200).json({
+            status: "ok",
+            message: "Update user successfully",
+            data: user,
+        });
     }catch(err){
-        console.log(err)
+        console.log(err);
+        res.status(500).json({
+            status: "nok",
+            message: "Internal server error",
+            data: null,
+        });
     }
 }

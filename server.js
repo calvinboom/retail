@@ -1,22 +1,25 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const path = require("path");
-const app = express();
+
 dotenv.config();
 
+const app = express();
+const PORT = process.env.FRONTEND_PORT || process.env.REACT_APP_FRONTEND_PORT || 3000;
+
+// Serve static files from React build
 app.use(express.static(path.join(__dirname, "build")));
 
-app.get("/", function (req, res) {
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// Serve React app for all routes (SPA support)
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-// INFO: https://stackoverflow.com/questions/53234140/react-expressjs-backend-cant-serve-static-frontend
-app.use("*", (req, res) =>
-  res.sendFile(path.join(__dirname, "build", "index.html"))
-);
-
-app.listen(process.env.REACT_APP_FRONTEND_PORT, () => {
-  console.log(
-    `React app now listening to port ${process.env.REACT_APP_FRONTEND_PORT}`
-  );
+app.listen(PORT, () => {
+  console.log(`Frontend server listening on port ${PORT}`);
 });
